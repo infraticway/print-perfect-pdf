@@ -20,8 +20,14 @@ export const adminUpdatePin = createServerFn({ method: "POST" })
     (d: {
       password: string;
       id: string;
-      patch: { price?: number | null; label?: string | null; x?: number; y?: number; page?: number };
-    }) => d
+      patch: {
+        price?: number | null;
+        label?: string | null;
+        x?: number;
+        y?: number;
+        page?: number;
+      };
+    }) => d,
   )
   .handler(async ({ data }) => {
     checkAdminPassword(data.password);
