@@ -168,6 +168,7 @@ function PageEditor({
   password,
   pageNum,
   src,
+  aspect,
   pins,
   selectedId,
   onSelect,
@@ -175,6 +176,7 @@ function PageEditor({
   password: string;
   pageNum: number;
   src: string;
+  aspect: number;
   pins: Pin[];
   selectedId: string | null;
   onSelect: (id: string | null) => void;
