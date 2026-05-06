@@ -38,7 +38,7 @@ function Cardapio() {
             <div
               key={page.num}
               className="relative w-full overflow-hidden rounded-lg bg-white shadow-sm"
-              style={{ aspectRatio: `${PAGE_ASPECT}`, containerType: "inline-size" }}
+              style={{ aspectRatio: `${page.aspect}`, containerType: "inline-size" }}
             >
               <img
                 src={page.src}
