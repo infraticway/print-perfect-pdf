@@ -152,11 +152,13 @@ export const ITEMS: MenuItem[] = [
 ];
 
 export const PAGES = [
+  { num: 1, src: "/menu/page-1.jpg" },
   { num: 2, src: "/menu/page-2.jpg" },
   { num: 3, src: "/menu/page-3.jpg" },
   { num: 4, src: "/menu/page-4.jpg" },
   { num: 5, src: "/menu/page-5.jpg" },
   { num: 6, src: "/menu/page-6.jpg" },
+  { num: 7, src: "/menu/page-7.jpg" },
 ];
 
 export const PAGE_ASPECT = 3308 / 2339; // largura / altura
