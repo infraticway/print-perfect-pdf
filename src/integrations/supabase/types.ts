@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      menu_pins: {
+        Row: {
+          created_at: string
+          id: string
+          label: string | null
+          page: number
+          price: number | null
+          updated_at: string
+          x: number
+          y: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          label?: string | null
+          page: number
+          price?: number | null
+          updated_at?: string
+          x: number
+          y: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          label?: string | null
+          page?: number
+          price?: number | null
+          updated_at?: string
+          x?: number
+          y?: number
+        }
+        Relationships: []
+      }
       menu_prices: {
         Row: {
           item_id: string
