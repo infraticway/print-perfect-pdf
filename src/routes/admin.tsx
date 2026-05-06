@@ -233,7 +233,9 @@ function PageEditor({
     const { x, y } = coordsFromEvent(e.clientX, e.clientY);
     try {
       const pin = await adminCreatePin({ data: { password, page: pageNum, x, y } });
-      onSelect((pin as Pin).id);
+      const createdPin = pin as Pin;
+      onLocalCreate(createdPin);
+      onSelect(createdPin.id);
     } catch (err) {
       toast.error("Erro ao criar pino", { description: String(err) });
     }
