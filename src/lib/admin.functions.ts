@@ -18,11 +18,19 @@ export const adminLogin = ({ data }: { data: { password: string } }) => {
   return callAdminPins<{ ok: true }>({ action: "login", password: data.password });
 };
 
-export const adminCreatePin = ({ data }: { data: { password: string; page: number; x: number; y: number } }) => {
+export const adminCreatePin = ({
+  data,
+}: {
+  data: { password: string; page: number; x: number; y: number };
+}) => {
   return callAdminPins({ action: "create", ...data });
 };
 
-export const adminUpdatePin = ({ data }: { data: { password: string; id: string; patch: PinPatch } }) => {
+export const adminUpdatePin = ({
+  data,
+}: {
+  data: { password: string; id: string; patch: PinPatch };
+}) => {
   return callAdminPins<{ ok: true }>({ action: "update", ...data });
 };
 
