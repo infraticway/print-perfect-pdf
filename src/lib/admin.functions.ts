@@ -1,5 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
-import { checkAdminPassword, createMenuPin, deleteMenuPin, updateMenuPin } from "./admin.server";
+import {
+  checkAdminPassword,
+  createMenuPin,
+  deleteMenuPin,
+  updateMenuPin,
+} from "@/server/admin.server";
 
 export const adminLogin = createServerFn({ method: "POST" })
   .inputValidator((d: { password: string }) => d)
