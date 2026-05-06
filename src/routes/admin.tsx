@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { PAGES, PAGE_ASPECT, formatPrice } from "@/lib/menu-data";
+import { PAGES, formatPrice } from "@/lib/menu-data";
 import { usePins, type Pin } from "@/lib/use-pins";
 import { adminLogin, adminCreatePin, adminUpdatePin, adminDeletePin } from "@/lib/admin.functions";
 import { Input } from "@/components/ui/input";
@@ -153,6 +153,7 @@ function AdminBoard({ password, onLogout }: { password: string; onLogout: () => 
             password={password}
             pageNum={page.num}
             src={page.src}
+            aspect={page.aspect}
             pins={pins.filter((p) => p.page === page.num)}
             selectedId={selectedId}
             onSelect={setSelectedId}
@@ -167,6 +168,7 @@ function PageEditor({
   password,
   pageNum,
   src,
+  aspect,
   pins,
   selectedId,
   onSelect,
@@ -174,6 +176,7 @@ function PageEditor({
   password: string;
   pageNum: number;
   src: string;
+  aspect: number;
   pins: Pin[];
   selectedId: string | null;
   onSelect: (id: string | null) => void;
@@ -247,7 +250,7 @@ function PageEditor({
         ref={containerRef}
         onClick={handleBackgroundClick}
         className="relative w-full cursor-crosshair"
-        style={{ aspectRatio: `${PAGE_ASPECT}`, containerType: "inline-size" }}
+        style={{ aspectRatio: `${aspect}`, containerType: "inline-size" }}
       >
         <img
           src={src}
