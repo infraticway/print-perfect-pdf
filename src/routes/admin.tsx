@@ -183,7 +183,8 @@ function PageEditor({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState<{ id: string; x: number; y: number } | null>(null);
-  const [didDrag, setDidDrag] = useState(false);
+  const didDragRef = useRef(false);
+  const dragStartRef = useRef<{ x: number; y: number } | null>(null);
 
   const coordsFromEvent = (clientX: number, clientY: number) => {
     const rect = containerRef.current!.getBoundingClientRect();
@@ -209,18 +210,25 @@ function PageEditor({
   const startDrag = (e: React.PointerEvent, id: string) => {
     e.preventDefault();
     e.stopPropagation();
-    setDidDrag(false);
-    let last = { x: 0, y: 0 };
+    didDragRef.current = false;
+    const start = coordsFromEvent(e.clientX, e.clientY);
+    dragStartRef.current = start;
+    let last = start;
 
     const move = (ev: PointerEvent) => {
-      setDidDrag(true);
-      last = coordsFromEvent(ev.clientX, ev.clientY);
-      setDragging({ id, ...last });
+      const cur = coordsFromEvent(ev.clientX, ev.clientY);
+      if (!didDragRef.current) {
+        const dx = cur.x - start.x;
+        const dy = cur.y - start.y;
+        if (dx * dx + dy * dy > 0.25) didDragRef.current = true;
+      }
+      last = cur;
+      if (didDragRef.current) setDragging({ id, ...last });
     };
     const up = async () => {
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", up);
-      const dragged = didDrag;
+      const dragged = didDragRef.current;
       setDragging(null);
       if (dragged) {
         try {
