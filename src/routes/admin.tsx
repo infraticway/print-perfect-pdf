@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { PAGES, PAGE_ASPECT, formatPrice } from "@/lib/menu-data";
+import { PAGES, formatPrice } from "@/lib/menu-data";
 import { usePins, type Pin } from "@/lib/use-pins";
 import { adminLogin, adminCreatePin, adminUpdatePin, adminDeletePin } from "@/lib/admin.functions";
 import { Input } from "@/components/ui/input";
