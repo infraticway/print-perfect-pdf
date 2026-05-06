@@ -50,7 +50,7 @@ function Cardapio() {
                 pin.price == null ? null : (
                   <div
                     key={pin.id}
-                    className="absolute -translate-x-full -translate-y-1/2 whitespace-nowrap rounded-md px-1.5 py-0.5 text-[clamp(10px,1.05cqi,18px)] font-bold tracking-tight shadow-sm"
+                    className="absolute -translate-x-full -translate-y-1/2 whitespace-nowrap rounded px-1 py-px text-[clamp(7px,0.75cqi,13px)] font-bold leading-tight tracking-tight shadow-sm"
                     style={{
                       left: `${pin.x}%`,
                       top: `${pin.y}%`,
