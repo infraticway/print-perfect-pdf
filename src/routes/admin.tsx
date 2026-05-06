@@ -1,13 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PAGES, PAGE_ASPECT, formatPrice } from "@/lib/menu-data";
-import { usePins, createPin, updatePin, deletePin, type Pin } from "@/lib/use-pins";
+import { usePins, type Pin } from "@/lib/use-pins";
+import {
+  adminLogin,
+  adminCreatePin,
+  adminUpdatePin,
+  adminDeletePin,
+} from "@/server/admin.functions";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin")({
   component: Admin,
 });
+
+const PASSWORD_KEY = "havanna_admin_pwd";
 
 function parseInput(v: string): number | null {
   if (!v.trim()) return null;
@@ -16,6 +24,84 @@ function parseInput(v: string): number | null {
 }
 
 function Admin() {
+  const [password, setPassword] = useState<string | null>(null);
+
+  useEffect(() => {
+    const stored = sessionStorage.getItem(PASSWORD_KEY);
+    if (stored) setPassword(stored);
+  }, []);
+
+  if (!password) {
+    return <Login onSuccess={(pwd) => {
+      sessionStorage.setItem(PASSWORD_KEY, pwd);
+      setPassword(pwd);
+    }} />;
+  }
+
+  return <AdminBoard password={password} onLogout={() => {
+    sessionStorage.removeItem(PASSWORD_KEY);
+    setPassword(null);
+  }} />;
+}
+
+function Login({ onSuccess }: { onSuccess: (pwd: string) => void }) {
+  const [pwd, setPwd] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    try {
+      await adminLogin({ data: { password: pwd } });
+      onSuccess(pwd);
+    } catch (err) {
+      setError("Senha incorreta");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-neutral-100 px-4">
+      <form
+        onSubmit={submit}
+        className="w-full max-w-sm rounded-lg border border-neutral-200 bg-white p-6 shadow-sm"
+      >
+        <h1 className="text-lg font-bold" style={{ color: "oklch(0.58 0.18 35)" }}>
+          HAVANNA
+        </h1>
+        <p className="mb-4 text-xs uppercase tracking-widest text-neutral-500">
+          Acesso restrito
+        </p>
+        <label className="mb-1 block text-xs font-medium text-neutral-600">Senha</label>
+        <Input
+          type="password"
+          autoFocus
+          value={pwd}
+          onChange={(e) => setPwd(e.target.value)}
+          placeholder="••••••••"
+        />
+        {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
+        <button
+          type="submit"
+          disabled={loading || !pwd}
+          className="mt-4 w-full rounded-md bg-neutral-900 px-3 py-2 text-sm font-medium text-white hover:bg-neutral-800 disabled:opacity-50"
+        >
+          {loading ? "Entrando..." : "Entrar"}
+        </button>
+        <div className="mt-3 text-center">
+          <Link to="/" className="text-xs text-neutral-500 hover:underline">
+            ← Voltar ao cardápio
+          </Link>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+function AdminBoard({ password, onLogout }: { password: string; onLogout: () => void }) {
   const { pins, loading } = usePins();
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -33,7 +119,7 @@ function Admin() {
               Admin — Pinos de preço
             </p>
           </div>
-          <div className="flex items-center gap-4 text-sm">
+          <div className="flex items-center gap-3 text-sm">
             <span className="opacity-80">
               {filled} preços / {pins.length} pinos
             </span>
@@ -43,6 +129,12 @@ function Admin() {
             >
               Ver cardápio
             </Link>
+            <button
+              onClick={onLogout}
+              className="rounded-md border border-white/20 px-3 py-1.5 text-xs font-medium hover:bg-white/10"
+            >
+              Sair
+            </button>
           </div>
         </div>
       </header>
@@ -63,6 +155,7 @@ function Admin() {
         {PAGES.map((page) => (
           <PageEditor
             key={page.num}
+            password={password}
             pageNum={page.num}
             src={page.src}
             pins={pins.filter((p) => p.page === page.num)}
@@ -76,12 +169,14 @@ function Admin() {
 }
 
 function PageEditor({
+  password,
   pageNum,
   src,
   pins,
   selectedId,
   onSelect,
 }: {
+  password: string;
   pageNum: number;
   src: string;
   pins: Pin[];
@@ -106,8 +201,8 @@ function PageEditor({
     if (e.target !== e.currentTarget && !(e.target as HTMLElement).dataset.bg) return;
     const { x, y } = coordsFromEvent(e.clientX, e.clientY);
     try {
-      const pin = await createPin({ page: pageNum, x, y });
-      onSelect(pin.id);
+      const pin = await adminCreatePin({ data: { password, page: pageNum, x, y } });
+      onSelect((pin as Pin).id);
     } catch (err) {
       toast.error("Erro ao criar pino", { description: String(err) });
     }
@@ -131,7 +226,7 @@ function PageEditor({
       setDragging(null);
       if (dragged) {
         try {
-          await updatePin(id, last);
+          await adminUpdatePin({ data: { password, id, patch: last } });
         } catch (err) {
           toast.error("Erro ao mover", { description: String(err) });
         }
@@ -195,6 +290,7 @@ function PageEditor({
 
         {selectedId && pins.some((p) => p.id === selectedId) && (
           <PinEditor
+            password={password}
             pin={pins.find((p) => p.id === selectedId)!}
             onClose={() => onSelect(null)}
           />
@@ -204,7 +300,15 @@ function PageEditor({
   );
 }
 
-function PinEditor({ pin, onClose }: { pin: Pin; onClose: () => void }) {
+function PinEditor({
+  password,
+  pin,
+  onClose,
+}: {
+  password: string;
+  pin: Pin;
+  onClose: () => void;
+}) {
   const [priceDraft, setPriceDraft] = useState(
     pin.price == null ? "" : pin.price.toFixed(2).replace(".", ",")
   );
@@ -212,9 +316,15 @@ function PinEditor({ pin, onClose }: { pin: Pin; onClose: () => void }) {
 
   const save = async () => {
     try {
-      await updatePin(pin.id, {
-        price: parseInput(priceDraft),
-        label: labelDraft.trim() || null,
+      await adminUpdatePin({
+        data: {
+          password,
+          id: pin.id,
+          patch: {
+            price: parseInput(priceDraft),
+            label: labelDraft.trim() || null,
+          },
+        },
       });
       toast.success("Pino salvo");
       onClose();
@@ -226,7 +336,7 @@ function PinEditor({ pin, onClose }: { pin: Pin; onClose: () => void }) {
   const remove = async () => {
     if (!confirm("Remover este pino?")) return;
     try {
-      await deletePin(pin.id);
+      await adminDeletePin({ data: { password, id: pin.id } });
       onClose();
     } catch (err) {
       toast.error("Erro ao remover", { description: String(err) });
