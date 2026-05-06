@@ -153,6 +153,7 @@ function AdminBoard({ password, onLogout }: { password: string; onLogout: () => 
             password={password}
             pageNum={page.num}
             src={page.src}
+            aspect={page.aspect}
             pins={pins.filter((p) => p.page === page.num)}
             selectedId={selectedId}
             onSelect={setSelectedId}
