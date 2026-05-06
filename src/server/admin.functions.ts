@@ -1,5 +1,4 @@
 import { createServerFn } from "@tanstack/react-start";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 function checkPassword(password: unknown) {
   const expected = process.env.ADMIN_PASSWORD;
