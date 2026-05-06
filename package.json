@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
+    "build": "SELF_HOST_NODE=1 vite build",
     "build:node": "SELF_HOST_NODE=1 vite build",
+    "build:cloudflare": "vite build",
     "start:node": "node dist/server/server.js",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
