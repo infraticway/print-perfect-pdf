@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { PAGES, PAGE_ASPECT, formatPrice } from "@/lib/menu-data";
+import { PAGES, formatPrice } from "@/lib/menu-data";
 import { usePins } from "@/lib/use-pins";
 
 export const Route = createFileRoute("/")({
