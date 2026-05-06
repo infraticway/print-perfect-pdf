@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ITEMS, PAGES, PAGE_ASPECT, formatPrice, type MenuItem } from "@/lib/menu-data";
-import { usePrices, savePrice } from "@/lib/use-prices";
+import { useRef, useState } from "react";
+import { PAGES, PAGE_ASPECT, formatPrice } from "@/lib/menu-data";
+import { usePins, createPin, updatePin, deletePin, type Pin } from "@/lib/use-pins";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
@@ -16,70 +16,10 @@ function parseInput(v: string): number | null {
 }
 
 function Admin() {
-  const { prices, loading } = usePrices();
-  const [drafts, setDrafts] = useState<Record<string, string>>({});
-  const [savingId, setSavingId] = useState<string | null>(null);
+  const { pins, loading } = usePins();
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  // initialise drafts from loaded prices
-  useEffect(() => {
-    const next: Record<string, string> = {};
-    for (const item of ITEMS) {
-      const p = prices[item.id]?.price;
-      next[item.id] = p == null ? "" : p.toFixed(2).replace(".", ",");
-    }
-    setDrafts((prev) => ({ ...next, ...prev }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading]);
-
-  const sections = useMemo(() => {
-    const map = new Map<string, MenuItem[]>();
-    for (const item of ITEMS) {
-      const arr = map.get(item.section) || [];
-      arr.push(item);
-      map.set(item.section, arr);
-    }
-    return Array.from(map.entries());
-  }, []);
-
-  const filled = ITEMS.filter((i) => prices[i.id]?.price != null).length;
-
-  const handleBlur = async (id: string) => {
-    const value = parseInput(drafts[id] || "");
-    if (value === (prices[id]?.price ?? null)) return;
-    setSavingId(id);
-    try {
-      await savePrice(id, { price: value });
-      toast.success("Preço salvo", { description: formatPrice(value) || "removido" });
-    } catch (e) {
-      toast.error("Erro ao salvar", { description: String(e) });
-    } finally {
-      setSavingId(null);
-    }
-  };
-
-  const getPos = (item: MenuItem) => {
-    const row = prices[item.id];
-    return {
-      page: row?.page ?? item.page,
-      x: row?.x ?? item.x,
-      y: row?.y ?? item.y,
-    };
-  };
-
-  const handleDragEnd = async (id: string, x: number, y: number, page: number) => {
-    try {
-      await savePrice(id, { x, y, page });
-    } catch (e) {
-      toast.error("Erro ao salvar posição", { description: String(e) });
-    }
-  };
-
-  const scrollToItem = (id: string) => {
-    setSelectedId(id);
-    const el = document.getElementById(`row-${id}`);
-    el?.scrollIntoView({ behavior: "smooth", block: "center" });
-  };
+  const filled = pins.filter((p) => p.price != null).length;
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -90,12 +30,12 @@ function Admin() {
               HAVANNA
             </h1>
             <p className="text-[10px] uppercase tracking-widest opacity-70">
-              Admin — Preços e posições
+              Admin — Pinos de preço
             </p>
           </div>
           <div className="flex items-center gap-4 text-sm">
             <span className="opacity-80">
-              {filled} / {ITEMS.length} preenchidos
+              {filled} preços / {pins.length} pinos
             </span>
             <Link
               to="/"
@@ -107,215 +47,255 @@ function Admin() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-6 py-8">
-        <p className="mb-6 text-sm text-neutral-600">
-          Digite o preço (salva ao sair do campo). <strong>Arraste o badge</strong> sobre a imagem para reposicionar.
-          Para mover entre páginas, ajuste manualmente nos campos da linha.
-        </p>
-
-        <div className="grid gap-8 lg:grid-cols-[1fr_minmax(0,640px)]">
-          {/* Form */}
-          <div className="space-y-6">
-            {sections.map(([section, items]) => (
-              <section
-                key={section}
-                className="overflow-hidden rounded-xl border border-neutral-200 bg-white"
-              >
-                <div className="border-b border-neutral-200 bg-neutral-900 px-4 py-2.5">
-                  <h2 className="text-sm font-semibold uppercase tracking-wide text-white">
-                    {section}
-                  </h2>
-                </div>
-                <div className="divide-y divide-neutral-100">
-                  {items.map((item) => {
-                    const pos = getPos(item);
-                    const isSelected = selectedId === item.id;
-                    return (
-                      <div
-                        key={item.id}
-                        id={`row-${item.id}`}
-                        className={`flex flex-wrap items-center gap-3 px-4 py-2.5 transition-colors ${
-                          isSelected ? "bg-orange-50" : ""
-                        }`}
-                        onMouseEnter={() => setSelectedId(item.id)}
-                      >
-                        <label
-                          htmlFor={item.id}
-                          className="min-w-0 flex-1 text-sm leading-tight text-neutral-800"
-                        >
-                          {item.label}
-                        </label>
-                        <div className="flex w-36 items-stretch overflow-hidden rounded-md border border-neutral-300 bg-white focus-within:ring-2 focus-within:ring-orange-400">
-                          <span className="flex items-center bg-neutral-100 px-2 text-xs font-medium text-neutral-500">
-                            R$
-                          </span>
-                          <Input
-                            id={item.id}
-                            inputMode="decimal"
-                            placeholder="0,00"
-                            value={drafts[item.id] ?? ""}
-                            onChange={(e) =>
-                              setDrafts((d) => ({ ...d, [item.id]: e.target.value }))
-                            }
-                            onBlur={() => handleBlur(item.id)}
-                            className="border-0 text-right focus-visible:ring-0"
-                          />
-                        </div>
-                        <div className="flex items-center gap-1 text-[11px] text-neutral-500">
-                          <span>Pg</span>
-                          <Input
-                            type="number"
-                            min={2}
-                            max={6}
-                            value={pos.page}
-                            onChange={(e) => {
-                              const p = parseInt(e.target.value);
-                              if (!isNaN(p)) savePrice(item.id, { page: p });
-                            }}
-                            className="h-7 w-12 px-1 text-center text-xs"
-                          />
-                          <span className="ml-1">x</span>
-                          <span className="w-9 text-right tabular-nums">{pos.x.toFixed(1)}</span>
-                          <span>y</span>
-                          <span className="w-9 text-right tabular-nums">{pos.y.toFixed(1)}</span>
-                        </div>
-                        {savingId === item.id && (
-                          <span className="text-[10px] uppercase tracking-wide text-orange-500">
-                            salvando
-                          </span>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </section>
-            ))}
-          </div>
-
-          {/* Preview com drag */}
-          <aside className="lg:sticky lg:top-24 lg:h-[calc(100vh-7rem)] lg:overflow-y-auto">
-            <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-neutral-500">
-              Pré-visualização — arraste os preços
-            </h3>
-            <div className="space-y-3">
-              {PAGES.map((page) => {
-                const items = ITEMS.filter((i) => getPos(i).page === page.num);
-                return (
-                  <PagePreview
-                    key={page.num}
-                    pageNum={page.num}
-                    src={page.src}
-                    items={items}
-                    getPos={getPos}
-                    drafts={drafts}
-                    pricesMap={prices}
-                    selectedId={selectedId}
-                    onSelect={scrollToItem}
-                    onDragEnd={handleDragEnd}
-                  />
-                );
-              })}
-            </div>
-          </aside>
+      <main className="mx-auto max-w-6xl space-y-4 px-4 py-6">
+        <div className="rounded-lg border border-neutral-200 bg-white p-4 text-sm text-neutral-700">
+          <p className="mb-1 font-semibold">Como usar</p>
+          <ul className="list-disc space-y-0.5 pl-5 text-neutral-600">
+            <li><strong>Clique</strong> em qualquer ponto da imagem para criar um pino de preço ali.</li>
+            <li><strong>Arraste</strong> um pino existente para reposicionar.</li>
+            <li>Clique em um pino para <strong>editar o preço</strong> ou <strong>remover</strong>.</li>
+            <li>Pinos sem preço aparecem como <span className="rounded bg-neutral-200 px-1 text-[10px] font-bold">novo</span> e ficam ocultos no cardápio público.</li>
+          </ul>
         </div>
+
+        {loading && <p className="text-sm text-neutral-500">Carregando...</p>}
+
+        {PAGES.map((page) => (
+          <PageEditor
+            key={page.num}
+            pageNum={page.num}
+            src={page.src}
+            pins={pins.filter((p) => p.page === page.num)}
+            selectedId={selectedId}
+            onSelect={setSelectedId}
+          />
+        ))}
       </main>
     </div>
   );
 }
 
-function PagePreview({
+function PageEditor({
   pageNum,
   src,
-  items,
-  getPos,
-  drafts,
-  pricesMap,
+  pins,
   selectedId,
   onSelect,
-  onDragEnd,
 }: {
   pageNum: number;
   src: string;
-  items: MenuItem[];
-  getPos: (i: MenuItem) => { page: number; x: number; y: number };
-  drafts: Record<string, string>;
-  pricesMap: Record<string, { price: number | null }>;
+  pins: Pin[];
   selectedId: string | null;
-  onSelect: (id: string) => void;
-  onDragEnd: (id: string, x: number, y: number, page: number) => void;
+  onSelect: (id: string | null) => void;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState<{ id: string; x: number; y: number } | null>(null);
+  const [didDrag, setDidDrag] = useState(false);
+
+  const coordsFromEvent = (clientX: number, clientY: number) => {
+    const rect = containerRef.current!.getBoundingClientRect();
+    const x = ((clientX - rect.left) / rect.width) * 100;
+    const y = ((clientY - rect.top) / rect.height) * 100;
+    return {
+      x: Math.max(0, Math.min(100, parseFloat(x.toFixed(2)))),
+      y: Math.max(0, Math.min(100, parseFloat(y.toFixed(2)))),
+    };
+  };
+
+  const handleBackgroundClick = async (e: React.MouseEvent) => {
+    if (e.target !== e.currentTarget && !(e.target as HTMLElement).dataset.bg) return;
+    const { x, y } = coordsFromEvent(e.clientX, e.clientY);
+    try {
+      const pin = await createPin({ page: pageNum, x, y });
+      onSelect(pin.id);
+    } catch (err) {
+      toast.error("Erro ao criar pino", { description: String(err) });
+    }
+  };
 
   const startDrag = (e: React.PointerEvent, id: string) => {
     e.preventDefault();
     e.stopPropagation();
-    onSelect(id);
-    const rect = containerRef.current!.getBoundingClientRect();
+    setDidDrag(false);
+    let last = { x: 0, y: 0 };
 
     const move = (ev: PointerEvent) => {
-      const x = ((ev.clientX - rect.left) / rect.width) * 100;
-      const y = ((ev.clientY - rect.top) / rect.height) * 100;
-      setDragging({ id, x: Math.max(0, Math.min(100, x)), y: Math.max(0, Math.min(100, y)) });
+      setDidDrag(true);
+      last = coordsFromEvent(ev.clientX, ev.clientY);
+      setDragging({ id, ...last });
     };
-    const up = (ev: PointerEvent) => {
+    const up = async () => {
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", up);
-      const x = ((ev.clientX - rect.left) / rect.width) * 100;
-      const y = ((ev.clientY - rect.top) / rect.height) * 100;
-      const cx = Math.max(0, Math.min(100, x));
-      const cy = Math.max(0, Math.min(100, y));
-      onDragEnd(id, parseFloat(cx.toFixed(2)), parseFloat(cy.toFixed(2)), pageNum);
+      const dragged = didDrag;
       setDragging(null);
+      if (dragged) {
+        try {
+          await updatePin(id, last);
+        } catch (err) {
+          toast.error("Erro ao mover", { description: String(err) });
+        }
+      } else {
+        onSelect(id);
+      }
     };
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerup", up);
   };
 
   return (
+    <section className="overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm">
+      <div className="flex items-center justify-between border-b border-neutral-200 bg-neutral-100 px-4 py-2">
+        <h2 className="text-xs font-semibold uppercase tracking-widest text-neutral-600">
+          Página {pageNum}
+        </h2>
+        <span className="text-[11px] text-neutral-500">
+          {pins.length} pinos · clique na imagem para adicionar
+        </span>
+      </div>
+      <div
+        ref={containerRef}
+        onClick={handleBackgroundClick}
+        className="relative w-full cursor-crosshair"
+        style={{ aspectRatio: `${PAGE_ASPECT}`, containerType: "inline-size" }}
+      >
+        <img
+          src={src}
+          alt={`Página ${pageNum}`}
+          data-bg="1"
+          draggable={false}
+          className="absolute inset-0 h-full w-full select-none object-cover"
+        />
+        {pins.map((pin) => {
+          const live = dragging?.id === pin.id ? dragging : null;
+          const x = live ? live.x : pin.x;
+          const y = live ? live.y : pin.y;
+          const isSelected = selectedId === pin.id;
+          const hasPrice = pin.price != null;
+          return (
+            <div
+              key={pin.id}
+              onPointerDown={(e) => startDrag(e, pin.id)}
+              className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-grab whitespace-nowrap rounded-md px-1.5 py-0.5 text-[clamp(9px,1cqi,16px)] font-bold tracking-tight shadow-sm active:cursor-grabbing ${
+                isSelected ? "z-20 ring-2 ring-orange-500 ring-offset-1" : "z-10"
+              }`}
+              style={{
+                left: `${x}%`,
+                top: `${y}%`,
+                backgroundColor: hasPrice ? "rgba(255, 248, 235, 0.95)" : "rgba(255, 220, 180, 0.95)",
+                color: "oklch(0.45 0.18 35)",
+                border: `1px solid oklch(0.58 0.18 35 / ${hasPrice ? 0.5 : 0.8})`,
+                touchAction: "none",
+              }}
+            >
+              {hasPrice ? formatPrice(pin.price) : "novo"}
+            </div>
+          );
+        })}
+
+        {selectedId && pins.some((p) => p.id === selectedId) && (
+          <PinEditor
+            pin={pins.find((p) => p.id === selectedId)!}
+            onClose={() => onSelect(null)}
+          />
+        )}
+      </div>
+    </section>
+  );
+}
+
+function PinEditor({ pin, onClose }: { pin: Pin; onClose: () => void }) {
+  const [priceDraft, setPriceDraft] = useState(
+    pin.price == null ? "" : pin.price.toFixed(2).replace(".", ",")
+  );
+  const [labelDraft, setLabelDraft] = useState(pin.label ?? "");
+
+  const save = async () => {
+    try {
+      await updatePin(pin.id, {
+        price: parseInput(priceDraft),
+        label: labelDraft.trim() || null,
+      });
+      toast.success("Pino salvo");
+      onClose();
+    } catch (err) {
+      toast.error("Erro ao salvar", { description: String(err) });
+    }
+  };
+
+  const remove = async () => {
+    if (!confirm("Remover este pino?")) return;
+    try {
+      await deletePin(pin.id);
+      onClose();
+    } catch (err) {
+      toast.error("Erro ao remover", { description: String(err) });
+    }
+  };
+
+  return (
     <div
-      ref={containerRef}
-      className="relative overflow-hidden rounded-md bg-white shadow-sm"
-      style={{ aspectRatio: `${PAGE_ASPECT}`, containerType: "inline-size" }}
+      onClick={(e) => e.stopPropagation()}
+      onPointerDown={(e) => e.stopPropagation()}
+      className="absolute right-3 top-3 z-30 w-64 rounded-lg border border-neutral-200 bg-white p-3 shadow-xl"
     >
-      <img
-        src={src}
-        alt={`Página ${pageNum}`}
-        className="absolute inset-0 h-full w-full select-none object-cover"
-        draggable={false}
+      <div className="mb-2 flex items-center justify-between">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-neutral-600">
+          Editar pino
+        </h3>
+        <button
+          onClick={onClose}
+          className="text-neutral-400 hover:text-neutral-700"
+          aria-label="Fechar"
+        >
+          ✕
+        </button>
+      </div>
+
+      <label className="mb-1 block text-[11px] font-medium text-neutral-500">Preço</label>
+      <div className="mb-2 flex items-stretch overflow-hidden rounded-md border border-neutral-300">
+        <span className="flex items-center bg-neutral-100 px-2 text-xs font-medium text-neutral-500">
+          R$
+        </span>
+        <Input
+          autoFocus
+          inputMode="decimal"
+          placeholder="0,00"
+          value={priceDraft}
+          onChange={(e) => setPriceDraft(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && save()}
+          className="border-0 text-right focus-visible:ring-0"
+        />
+      </div>
+
+      <label className="mb-1 block text-[11px] font-medium text-neutral-500">
+        Rótulo (opcional, só você vê)
+      </label>
+      <Input
+        placeholder="ex: Espresso Doppio"
+        value={labelDraft}
+        onChange={(e) => setLabelDraft(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && save()}
+        className="mb-3 text-sm"
       />
-      {items.map((item) => {
-        const pos = getPos(item);
-        const live = dragging?.id === item.id ? dragging : null;
-        const x = live ? live.x : pos.x;
-        const y = live ? live.y : pos.y;
-        const draftVal = drafts[item.id];
-        const price =
-          draftVal != null && draftVal !== ""
-            ? parseInput(draftVal)
-            : pricesMap[item.id]?.price;
-        const isSelected = selectedId === item.id;
-        return (
-          <div
-            key={item.id}
-            onPointerDown={(e) => startDrag(e, item.id)}
-            title={item.label}
-            className={`absolute -translate-x-full -translate-y-1/2 cursor-grab whitespace-nowrap rounded-md px-1.5 py-0.5 text-[clamp(9px,1cqi,16px)] font-bold tracking-tight shadow-sm active:cursor-grabbing ${
-              isSelected ? "ring-2 ring-orange-500 ring-offset-1" : ""
-            }`}
-            style={{
-              left: `${x}%`,
-              top: `${y}%`,
-              backgroundColor: "rgba(255, 248, 235, 0.95)",
-              color: "oklch(0.58 0.18 35)",
-              border: "1px solid oklch(0.58 0.18 35 / 0.4)",
-              touchAction: "none",
-            }}
-          >
-            {price != null ? formatPrice(price) : "R$ —"}
-          </div>
-        );
-      })}
+
+      <div className="flex gap-2">
+        <button
+          onClick={save}
+          className="flex-1 rounded-md bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-neutral-800"
+        >
+          Salvar
+        </button>
+        <button
+          onClick={remove}
+          className="rounded-md border border-red-300 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50"
+        >
+          Remover
+        </button>
+      </div>
+      <p className="mt-2 text-[10px] text-neutral-400">
+        Posição: {pin.x.toFixed(1)}%, {pin.y.toFixed(1)}%
+      </p>
     </div>
   );
 }
