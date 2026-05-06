@@ -1,5 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+
+const getAdmin = async () =>
+  (await import("@/integrations/supabase/client.server")).supabaseAdmin;
 
 function checkPassword(password: unknown) {
   const expected = process.env.ADMIN_PASSWORD;
@@ -20,7 +22,8 @@ export const adminCreatePin = createServerFn({ method: "POST" })
   .inputValidator((d: { password: string; page: number; x: number; y: number }) => d)
   .handler(async ({ data }) => {
     checkPassword(data.password);
-    const { data: row, error } = await supabaseAdmin
+    const admin = await getAdmin();
+    const { data: row, error } = await admin
       .from("menu_pins")
       .insert({ page: data.page, x: data.x, y: data.y, price: null, label: null })
       .select()
@@ -39,7 +42,8 @@ export const adminUpdatePin = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     checkPassword(data.password);
-    const { error } = await supabaseAdmin
+    const admin = await getAdmin();
+    const { error } = await admin
       .from("menu_pins")
       .update({ ...data.patch, updated_at: new Date().toISOString() })
       .eq("id", data.id);
@@ -51,7 +55,8 @@ export const adminDeletePin = createServerFn({ method: "POST" })
   .inputValidator((d: { password: string; id: string }) => d)
   .handler(async ({ data }) => {
     checkPassword(data.password);
-    const { error } = await supabaseAdmin.from("menu_pins").delete().eq("id", data.id);
+    const admin = await getAdmin();
+    const { error } = await admin.from("menu_pins").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
