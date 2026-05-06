@@ -1,14 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ITEMS, PAGES, PAGE_ASPECT } from "@/lib/menu-data";
-import { usePrices } from "@/lib/use-prices";
-import { PriceBadge } from "@/components/menu/PriceBadge";
+import { PAGES, PAGE_ASPECT, formatPrice } from "@/lib/menu-data";
+import { usePins } from "@/lib/use-pins";
 
 export const Route = createFileRoute("/")({
   component: Cardapio,
 });
 
 function Cardapio() {
-  const { prices, loading } = usePrices();
+  const { pins, loading } = usePins();
 
   return (
     <div className="min-h-screen bg-neutral-100">
@@ -34,11 +33,7 @@ function Cardapio() {
           <p className="text-center text-sm text-neutral-500">Carregando preços...</p>
         )}
         {PAGES.map((page) => {
-          const items = ITEMS.filter((i) => {
-            const row = prices[i.id];
-            const itemPage = row?.page ?? i.page;
-            return itemPage === page.num;
-          });
+          const pagePins = pins.filter((p) => p.page === page.num);
           return (
             <div
               key={page.num}
@@ -51,17 +46,23 @@ function Cardapio() {
                 className="absolute inset-0 h-full w-full object-cover"
                 loading="lazy"
               />
-              {items.map((item) => {
-                const row = prices[item.id];
-                return (
-                  <PriceBadge
-                    key={item.id}
-                    x={row?.x ?? item.x}
-                    y={row?.y ?? item.y}
-                    price={row?.price}
-                  />
-                );
-              })}
+              {pagePins.map((pin) =>
+                pin.price == null ? null : (
+                  <div
+                    key={pin.id}
+                    className="absolute -translate-x-full -translate-y-1/2 whitespace-nowrap rounded-md px-1.5 py-0.5 text-[clamp(10px,1.05cqi,18px)] font-bold tracking-tight shadow-sm"
+                    style={{
+                      left: `${pin.x}%`,
+                      top: `${pin.y}%`,
+                      backgroundColor: "rgba(255, 248, 235, 0.92)",
+                      color: "oklch(0.58 0.18 35)",
+                      border: "1px solid oklch(0.58 0.18 35 / 0.35)",
+                    }}
+                  >
+                    {formatPrice(pin.price)}
+                  </div>
+                )
+              )}
             </div>
           );
         })}
