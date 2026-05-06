@@ -250,7 +250,7 @@ function PageEditor({
         ref={containerRef}
         onClick={handleBackgroundClick}
         className="relative w-full cursor-crosshair"
-        style={{ aspectRatio: `${PAGE_ASPECT}`, containerType: "inline-size" }}
+        style={{ aspectRatio: `${aspect}`, containerType: "inline-size" }}
       >
         <img
           src={src}
