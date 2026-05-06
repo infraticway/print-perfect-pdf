@@ -151,17 +151,22 @@ export const ITEMS: MenuItem[] = [
   { id: "havannitas", label: "Havannitas (9g)", section: "Chocolates", page: 6, x: 95, y: 49 },
 ];
 
+// Páginas 1 e 7 são páginas únicas (capa/contracapa) com proporção retrato.
+// Páginas 2 a 6 são spreads duplos com proporção paisagem.
+const SPREAD_ASPECT = 3308 / 2339;
+const SINGLE_ASPECT = 1654 / 2339;
+
 export const PAGES = [
-  { num: 1, src: "/menu/page-1.jpg" },
-  { num: 2, src: "/menu/page-2.jpg" },
-  { num: 3, src: "/menu/page-3.jpg" },
-  { num: 4, src: "/menu/page-4.jpg" },
-  { num: 5, src: "/menu/page-5.jpg" },
-  { num: 6, src: "/menu/page-6.jpg" },
-  { num: 7, src: "/menu/page-7.jpg" },
+  { num: 1, src: "/menu/page-1.jpg", aspect: SINGLE_ASPECT },
+  { num: 2, src: "/menu/page-2.jpg", aspect: SPREAD_ASPECT },
+  { num: 3, src: "/menu/page-3.jpg", aspect: SPREAD_ASPECT },
+  { num: 4, src: "/menu/page-4.jpg", aspect: SPREAD_ASPECT },
+  { num: 5, src: "/menu/page-5.jpg", aspect: SPREAD_ASPECT },
+  { num: 6, src: "/menu/page-6.jpg", aspect: SPREAD_ASPECT },
+  { num: 7, src: "/menu/page-7.jpg", aspect: SINGLE_ASPECT },
 ];
 
-export const PAGE_ASPECT = 3308 / 2339; // largura / altura
+export const PAGE_ASPECT = SPREAD_ASPECT; // padrão (spread)
 
 export function formatPrice(v: number | null | undefined): string {
   if (v == null || isNaN(v)) return "";
