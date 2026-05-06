@@ -104,7 +104,7 @@ function Login({ onSuccess }: { onSuccess: (pwd: string) => void }) {
 }
 
 function AdminBoard({ password, onLogout }: { password: string; onLogout: () => void }) {
-  const { pins, loading, updatePinLocal } = usePins();
+  const { pins, loading, addPinLocal, updatePinLocal } = usePins();
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const filled = pins.filter((p) => p.price != null).length;
@@ -174,6 +174,7 @@ function AdminBoard({ password, onLogout }: { password: string; onLogout: () => 
             pins={pins.filter((p) => p.page === page.num)}
             selectedId={selectedId}
             onSelect={setSelectedId}
+            onLocalCreate={addPinLocal}
             onLocalMove={updatePinLocal}
           />
         ))}
@@ -190,6 +191,7 @@ function PageEditor({
   pins,
   selectedId,
   onSelect,
+  onLocalCreate,
   onLocalMove,
 }: {
   password: string;
@@ -199,6 +201,7 @@ function PageEditor({
   pins: Pin[];
   selectedId: string | null;
   onSelect: (id: string | null) => void;
+  onLocalCreate: (pin: Pin) => void;
   onLocalMove: (id: string, patch: Partial<Pin>) => void;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
