@@ -76,10 +76,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Preencha os preços e gere o PDF do cardápio Havanna com layout consistente." },
       { name: "author", content: "Havanna" },
       { property: "og:title", content: "Gerador de Cardápio Havanna" },
-      { property: "og:description", content: "Preencha os preços e gere o PDF do cardápio Havanna." },
+      { property: "og:description", content: "Preencha os preços e gere o PDF do cardápio Havanna com layout consistente." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Gerador de Cardápio Havanna" },
+      { name: "twitter:description", content: "Preencha os preços e gere o PDF do cardápio Havanna com layout consistente." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/721d6a43-4a1e-4241-9b50-ce713deb4341/id-preview-ad7cfa0a--8fb4fc2a-0e6c-4fa3-9e31-2ee7ae946d76.lovable.app-1778095124423.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/721d6a43-4a1e-4241-9b50-ce713deb4341/id-preview-ad7cfa0a--8fb4fc2a-0e6c-4fa3-9e31-2ee7ae946d76.lovable.app-1778095124423.png" },
     ],
     links: [
       {
