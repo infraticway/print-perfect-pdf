@@ -34,7 +34,11 @@ function Cardapio() {
           <p className="text-center text-sm text-neutral-500">Carregando preços...</p>
         )}
         {PAGES.map((page) => {
-          const items = ITEMS.filter((i) => i.page === page.num);
+          const items = ITEMS.filter((i) => {
+            const row = prices[i.id];
+            const itemPage = row?.page ?? i.page;
+            return itemPage === page.num;
+          });
           return (
             <div
               key={page.num}
@@ -47,9 +51,17 @@ function Cardapio() {
                 className="absolute inset-0 h-full w-full object-cover"
                 loading="lazy"
               />
-              {items.map((item) => (
-                <PriceBadge key={item.id} x={item.x} y={item.y} price={prices[item.id]} />
-              ))}
+              {items.map((item) => {
+                const row = prices[item.id];
+                return (
+                  <PriceBadge
+                    key={item.id}
+                    x={row?.x ?? item.x}
+                    y={row?.y ?? item.y}
+                    price={row?.price}
+                  />
+                );
+              })}
             </div>
           );
         })}
