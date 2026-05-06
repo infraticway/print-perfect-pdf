@@ -183,8 +183,17 @@ function PageEditor({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState<{ id: string; x: number; y: number } | null>(null);
-  const didDragRef = useRef(false);
-  const dragStartRef = useRef<{ x: number; y: number } | null>(null);
+  const dragRef = useRef<{
+    id: string;
+    pointerId: number;
+    startClientX: number;
+    startClientY: number;
+    originX: number;
+    originY: number;
+    x: number;
+    y: number;
+    moved: boolean;
+  } | null>(null);
 
   const coordsFromEvent = (clientX: number, clientY: number) => {
     const rect = containerRef.current!.getBoundingClientRect();
@@ -207,41 +216,62 @@ function PageEditor({
     }
   };
 
-  const startDrag = (e: React.PointerEvent, id: string) => {
+  const startDrag = (e: React.PointerEvent<HTMLDivElement>, pin: Pin) => {
     e.preventDefault();
     e.stopPropagation();
-    didDragRef.current = false;
-    const start = coordsFromEvent(e.clientX, e.clientY);
-    dragStartRef.current = start;
-    let last = start;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    dragRef.current = {
+      id: pin.id,
+      pointerId: e.pointerId,
+      startClientX: e.clientX,
+      startClientY: e.clientY,
+      originX: pin.x,
+      originY: pin.y,
+      x: pin.x,
+      y: pin.y,
+      moved: false,
+    };
+    setDragging(null);
+  };
 
-    const move = (ev: PointerEvent) => {
-      const cur = coordsFromEvent(ev.clientX, ev.clientY);
-      if (!didDragRef.current) {
-        const dx = cur.x - start.x;
-        const dy = cur.y - start.y;
-        if (dx * dx + dy * dy > 0.25) didDragRef.current = true;
-      }
-      last = cur;
-      if (didDragRef.current) setDragging({ id, ...last });
-    };
-    const up = async () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", up);
-      const dragged = didDragRef.current;
-      setDragging(null);
-      if (dragged) {
-        try {
-          await adminUpdatePin({ data: { password, id, patch: last } });
-        } catch (err) {
-          toast.error("Erro ao mover", { description: String(err) });
-        }
-      } else {
-        onSelect(id);
-      }
-    };
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", up);
+  const moveDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragRef.current;
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!drag || !rect || drag.pointerId !== e.pointerId) return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    const dxPx = e.clientX - drag.startClientX;
+    const dyPx = e.clientY - drag.startClientY;
+    if (!drag.moved && dxPx * dxPx + dyPx * dyPx > 16) drag.moved = true;
+
+    const x = drag.originX + (dxPx / rect.width) * 100;
+    const y = drag.originY + (dyPx / rect.height) * 100;
+    drag.x = Math.max(0, Math.min(100, parseFloat(x.toFixed(2))));
+    drag.y = Math.max(0, Math.min(100, parseFloat(y.toFixed(2))));
+
+    if (drag.moved) setDragging({ id: drag.id, x: drag.x, y: drag.y });
+  };
+
+  const endDrag = async (e: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== e.pointerId) return;
+    e.preventDefault();
+    e.stopPropagation();
+    e.currentTarget.releasePointerCapture(e.pointerId);
+    dragRef.current = null;
+    setDragging(null);
+
+    if (!drag.moved) {
+      onSelect(drag.id);
+      return;
+    }
+
+    try {
+      await adminUpdatePin({ data: { password, id: drag.id, patch: { x: drag.x, y: drag.y } } });
+    } catch (err) {
+      toast.error("Erro ao mover", { description: String(err) });
+    }
   };
 
   return (
@@ -276,7 +306,10 @@ function PageEditor({
           return (
             <div
               key={pin.id}
-              onPointerDown={(e) => startDrag(e, pin.id)}
+              onPointerDown={(e) => startDrag(e, pin)}
+              onPointerMove={moveDrag}
+              onPointerUp={endDrag}
+              onPointerCancel={endDrag}
               className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-grab whitespace-nowrap rounded px-1 py-px text-[clamp(7px,0.75cqi,13px)] font-bold leading-tight tracking-tight shadow-sm active:cursor-grabbing ${
                 isSelected ? "z-20 ring-2 ring-orange-500 ring-offset-1" : "z-10"
               }`}
