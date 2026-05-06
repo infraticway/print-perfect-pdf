@@ -60,29 +60,3 @@ export function usePins() {
 
   return { pins, loading };
 }
-
-export async function createPin(input: { page: number; x: number; y: number }) {
-  const { data, error } = await supabase
-    .from("menu_pins")
-    .insert({ ...input, price: null, label: null })
-    .select()
-    .single();
-  if (error) throw error;
-  return data as Pin;
-}
-
-export async function updatePin(
-  id: string,
-  patch: Partial<Pick<Pin, "price" | "label" | "x" | "y" | "page">>
-) {
-  const { error } = await supabase
-    .from("menu_pins")
-    .update({ ...patch, updated_at: new Date().toISOString() })
-    .eq("id", id);
-  if (error) throw error;
-}
-
-export async function deletePin(id: string) {
-  const { error } = await supabase.from("menu_pins").delete().eq("id", id);
-  if (error) throw error;
-}
