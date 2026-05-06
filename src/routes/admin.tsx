@@ -27,16 +27,25 @@ function Admin() {
   }, []);
 
   if (!password) {
-    return <Login onSuccess={(pwd) => {
-      sessionStorage.setItem(PASSWORD_KEY, pwd);
-      setPassword(pwd);
-    }} />;
+    return (
+      <Login
+        onSuccess={(pwd) => {
+          sessionStorage.setItem(PASSWORD_KEY, pwd);
+          setPassword(pwd);
+        }}
+      />
+    );
   }
 
-  return <AdminBoard password={password} onLogout={() => {
-    sessionStorage.removeItem(PASSWORD_KEY);
-    setPassword(null);
-  }} />;
+  return (
+    <AdminBoard
+      password={password}
+      onLogout={() => {
+        sessionStorage.removeItem(PASSWORD_KEY);
+        setPassword(null);
+      }}
+    />
+  );
 }
 
 function Login({ onSuccess }: { onSuccess: (pwd: string) => void }) {
@@ -67,9 +76,7 @@ function Login({ onSuccess }: { onSuccess: (pwd: string) => void }) {
         <h1 className="text-lg font-bold" style={{ color: "oklch(0.58 0.18 35)" }}>
           HAVANNA
         </h1>
-        <p className="mb-4 text-xs uppercase tracking-widest text-neutral-500">
-          Acesso restrito
-        </p>
+        <p className="mb-4 text-xs uppercase tracking-widest text-neutral-500">Acesso restrito</p>
         <label className="mb-1 block text-xs font-medium text-neutral-600">Senha</label>
         <Input
           type="password"
@@ -97,7 +104,7 @@ function Login({ onSuccess }: { onSuccess: (pwd: string) => void }) {
 }
 
 function AdminBoard({ password, onLogout }: { password: string; onLogout: () => void }) {
-  const { pins, loading } = usePins();
+  const { pins, loading, updatePinLocal } = usePins();
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const filled = pins.filter((p) => p.price != null).length;
@@ -138,10 +145,20 @@ function AdminBoard({ password, onLogout }: { password: string; onLogout: () => 
         <div className="rounded-lg border border-neutral-200 bg-white p-4 text-sm text-neutral-700">
           <p className="mb-1 font-semibold">Como usar</p>
           <ul className="list-disc space-y-0.5 pl-5 text-neutral-600">
-            <li><strong>Clique</strong> em qualquer ponto da imagem para criar um pino de preço ali.</li>
-            <li><strong>Arraste</strong> um pino existente para reposicionar.</li>
-            <li>Clique em um pino para <strong>editar o preço</strong> ou <strong>remover</strong>.</li>
-            <li>Pinos sem preço aparecem como <span className="rounded bg-neutral-200 px-1 text-[10px] font-bold">novo</span> e ficam ocultos no cardápio público.</li>
+            <li>
+              <strong>Clique</strong> em qualquer ponto da imagem para criar um pino de preço ali.
+            </li>
+            <li>
+              <strong>Arraste</strong> um pino existente para reposicionar.
+            </li>
+            <li>
+              Clique em um pino para <strong>editar o preço</strong> ou <strong>remover</strong>.
+            </li>
+            <li>
+              Pinos sem preço aparecem como{" "}
+              <span className="rounded bg-neutral-200 px-1 text-[10px] font-bold">novo</span> e
+              ficam ocultos no cardápio público.
+            </li>
           </ul>
         </div>
 
@@ -157,6 +174,7 @@ function AdminBoard({ password, onLogout }: { password: string; onLogout: () => 
             pins={pins.filter((p) => p.page === page.num)}
             selectedId={selectedId}
             onSelect={setSelectedId}
+            onLocalMove={updatePinLocal}
           />
         ))}
       </main>
@@ -172,6 +190,7 @@ function PageEditor({
   pins,
   selectedId,
   onSelect,
+  onLocalMove,
 }: {
   password: string;
   pageNum: number;
@@ -180,6 +199,7 @@ function PageEditor({
   pins: Pin[];
   selectedId: string | null;
   onSelect: (id: string | null) => void;
+  onLocalMove: (id: string, patch: Partial<Pin>) => void;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState<{ id: string; x: number; y: number } | null>(null);
@@ -267,9 +287,14 @@ function PageEditor({
       return;
     }
 
+    const pin = pins.find((p) => p.id === drag.id);
+    const previous = pin ? { x: pin.x, y: pin.y } : null;
+    onLocalMove(drag.id, { x: drag.x, y: drag.y });
+
     try {
       await adminUpdatePin({ data: { password, id: drag.id, patch: { x: drag.x, y: drag.y } } });
     } catch (err) {
+      if (previous) onLocalMove(drag.id, previous);
       toast.error("Erro ao mover", { description: String(err) });
     }
   };
@@ -316,7 +341,9 @@ function PageEditor({
               style={{
                 left: `${x}%`,
                 top: `${y}%`,
-                backgroundColor: hasPrice ? "rgba(255, 248, 235, 0.95)" : "rgba(255, 220, 180, 0.95)",
+                backgroundColor: hasPrice
+                  ? "rgba(255, 248, 235, 0.95)"
+                  : "rgba(255, 220, 180, 0.95)",
                 color: "oklch(0.45 0.18 35)",
                 border: `1px solid oklch(0.58 0.18 35 / ${hasPrice ? 0.5 : 0.8})`,
                 touchAction: "none",
@@ -349,7 +376,7 @@ function PinEditor({
   onClose: () => void;
 }) {
   const [priceDraft, setPriceDraft] = useState(
-    pin.price == null ? "" : pin.price.toFixed(2).replace(".", ",")
+    pin.price == null ? "" : pin.price.toFixed(2).replace(".", ","),
   );
   const [labelDraft, setLabelDraft] = useState(pin.label ?? "");
 

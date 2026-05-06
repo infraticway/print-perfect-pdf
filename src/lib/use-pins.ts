@@ -14,6 +14,10 @@ export function usePins() {
   const [pins, setPins] = useState<Pin[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const updatePinLocal = (id: string, patch: Partial<Pin>) => {
+    setPins((prev) => prev.map((pin) => (pin.id === id ? { ...pin, ...patch } : pin)));
+  };
+
   useEffect(() => {
     let mounted = true;
 
@@ -31,25 +35,21 @@ export function usePins() {
 
     const channel = supabase
       .channel("menu_pins_changes")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "menu_pins" },
-        (payload) => {
-          if (!mounted) return;
-          setPins((prev) => {
-            if (payload.eventType === "DELETE") {
-              const id = (payload.old as { id: string }).id;
-              return prev.filter((p) => p.id !== id);
-            }
-            const row = payload.new as Pin;
-            const idx = prev.findIndex((p) => p.id === row.id);
-            if (idx === -1) return [...prev, row];
-            const next = [...prev];
-            next[idx] = row;
-            return next;
-          });
-        }
-      )
+      .on("postgres_changes", { event: "*", schema: "public", table: "menu_pins" }, (payload) => {
+        if (!mounted) return;
+        setPins((prev) => {
+          if (payload.eventType === "DELETE") {
+            const id = (payload.old as { id: string }).id;
+            return prev.filter((p) => p.id !== id);
+          }
+          const row = payload.new as Pin;
+          const idx = prev.findIndex((p) => p.id === row.id);
+          if (idx === -1) return [...prev, row];
+          const next = [...prev];
+          next[idx] = row;
+          return next;
+        });
+      })
       .subscribe();
 
     return () => {
@@ -58,5 +58,5 @@ export function usePins() {
     };
   }, []);
 
-  return { pins, loading };
+  return { pins, loading, updatePinLocal };
 }
