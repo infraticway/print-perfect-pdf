@@ -183,7 +183,8 @@ function PageEditor({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState<{ id: string; x: number; y: number } | null>(null);
-  const [didDrag, setDidDrag] = useState(false);
+  const didDragRef = useRef(false);
+  const dragStartRef = useRef<{ x: number; y: number } | null>(null);
 
   const coordsFromEvent = (clientX: number, clientY: number) => {
     const rect = containerRef.current!.getBoundingClientRect();
