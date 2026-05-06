@@ -270,9 +270,14 @@ function PageEditor({
       return;
     }
 
+    const pin = pins.find((p) => p.id === drag.id);
+    const previous = pin ? { x: pin.x, y: pin.y } : null;
+    onLocalMove(drag.id, { x: drag.x, y: drag.y });
+
     try {
       await adminUpdatePin({ data: { password, id: drag.id, patch: { x: drag.x, y: drag.y } } });
     } catch (err) {
+      if (previous) onLocalMove(drag.id, previous);
       toast.error("Erro ao mover", { description: String(err) });
     }
   };
