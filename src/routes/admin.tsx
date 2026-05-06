@@ -216,7 +216,7 @@ function PageEditor({
     }
   };
 
-  const startDrag = (e: React.PointerEvent<HTMLButtonElement>, pin: Pin) => {
+  const startDrag = (e: React.PointerEvent<HTMLDivElement>, pin: Pin) => {
     e.preventDefault();
     e.stopPropagation();
     e.currentTarget.setPointerCapture(e.pointerId);
@@ -234,7 +234,7 @@ function PageEditor({
     setDragging(null);
   };
 
-  const moveDrag = (e: React.PointerEvent<HTMLButtonElement>) => {
+  const moveDrag = (e: React.PointerEvent<HTMLDivElement>) => {
     const drag = dragRef.current;
     const rect = containerRef.current?.getBoundingClientRect();
     if (!drag || !rect || drag.pointerId !== e.pointerId) return;
@@ -253,7 +253,7 @@ function PageEditor({
     if (drag.moved) setDragging({ id: drag.id, x: drag.x, y: drag.y });
   };
 
-  const endDrag = async (e: React.PointerEvent<HTMLButtonElement>) => {
+  const endDrag = async (e: React.PointerEvent<HTMLDivElement>) => {
     const drag = dragRef.current;
     if (!drag || drag.pointerId !== e.pointerId) return;
     e.preventDefault();
@@ -306,7 +306,10 @@ function PageEditor({
           return (
             <div
               key={pin.id}
-              onPointerDown={(e) => startDrag(e, pin.id)}
+              onPointerDown={(e) => startDrag(e, pin)}
+              onPointerMove={moveDrag}
+              onPointerUp={endDrag}
+              onPointerCancel={endDrag}
               className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-grab whitespace-nowrap rounded px-1 py-px text-[clamp(7px,0.75cqi,13px)] font-bold leading-tight tracking-tight shadow-sm active:cursor-grabbing ${
                 isSelected ? "z-20 ring-2 ring-orange-500 ring-offset-1" : "z-10"
               }`}
