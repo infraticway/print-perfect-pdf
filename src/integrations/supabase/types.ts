@@ -17,18 +17,27 @@ export type Database = {
       menu_prices: {
         Row: {
           item_id: string
+          page: number | null
           price: number | null
           updated_at: string
+          x: number | null
+          y: number | null
         }
         Insert: {
           item_id: string
+          page?: number | null
           price?: number | null
           updated_at?: string
+          x?: number | null
+          y?: number | null
         }
         Update: {
           item_id?: string
+          page?: number | null
           price?: number | null
           updated_at?: string
+          x?: number | null
+          y?: number | null
         }
         Relationships: []
       }
