@@ -14,6 +14,10 @@ export function usePins() {
   const [pins, setPins] = useState<Pin[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const updatePinLocal = (id: string, patch: Partial<Pin>) => {
+    setPins((prev) => prev.map((pin) => (pin.id === id ? { ...pin, ...patch } : pin)));
+  };
+
   useEffect(() => {
     let mounted = true;
 
@@ -58,5 +62,5 @@ export function usePins() {
     };
   }, []);
 
-  return { pins, loading };
+  return { pins, loading, updatePinLocal };
 }
