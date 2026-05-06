@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { PAGES, formatPrice } from "@/lib/menu-data";
 import { usePins } from "@/lib/use-pins";
 
@@ -20,12 +20,6 @@ function Cardapio() {
             Cafeteria Argentina — Cardápio
           </p>
         </div>
-        <Link
-          to="/admin"
-          className="rounded-md border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-700 hover:bg-neutral-50"
-        >
-          Admin
-        </Link>
       </div>
 
       <main className="mx-auto max-w-5xl space-y-4 p-2 sm:p-4">
