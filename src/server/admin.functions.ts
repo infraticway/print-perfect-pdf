@@ -1,5 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 
+const getAdmin = async () =>
+  (await import("@/integrations/supabase/client.server")).supabaseAdmin;
+
 function checkPassword(password: unknown) {
   const expected = process.env.ADMIN_PASSWORD;
   if (!expected) throw new Error("Servidor não configurado");
