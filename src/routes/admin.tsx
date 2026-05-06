@@ -7,7 +7,7 @@ import {
   adminCreatePin,
   adminUpdatePin,
   adminDeletePin,
-} from "@/server/admin.functions";
+} from "@/lib/admin.functions";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
