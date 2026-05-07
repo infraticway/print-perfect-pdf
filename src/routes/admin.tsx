@@ -112,28 +112,28 @@ function AdminBoard({ password, onLogout }: { password: string; onLogout: () => 
   return (
     <div className="min-h-screen bg-neutral-50">
       <header className="sticky top-0 z-30 border-b border-neutral-200 bg-neutral-900 text-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 px-3 py-3 sm:px-6 sm:py-4">
           <div>
-            <h1 className="text-lg font-bold" style={{ color: "oklch(0.7 0.18 40)" }}>
+            <h1 className="text-base font-bold sm:text-lg" style={{ color: "oklch(0.7 0.18 40)" }}>
               HAVANNA
             </h1>
             <p className="text-[10px] uppercase tracking-widest opacity-70">
               Admin — Pinos de preço
             </p>
           </div>
-          <div className="flex items-center gap-3 text-sm">
-            <span className="opacity-80">
-              {filled} preços / {pins.length} pinos
+          <div className="flex flex-wrap items-center gap-2 text-sm">
+            <span className="text-xs opacity-80">
+              {filled}/{pins.length} pinos
             </span>
             <Link
               to="/"
-              className="rounded-md bg-white/10 px-3 py-1.5 text-xs font-medium hover:bg-white/20"
+              className="rounded-md bg-white/10 px-2 py-1 text-xs font-medium hover:bg-white/20"
             >
-              Ver cardápio
+              Cardápio
             </Link>
             <button
               onClick={onLogout}
-              className="rounded-md border border-white/20 px-3 py-1.5 text-xs font-medium hover:bg-white/10"
+              className="rounded-md border border-white/20 px-2 py-1 text-xs font-medium hover:bg-white/10"
             >
               Sair
             </button>
