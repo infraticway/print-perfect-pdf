@@ -8,6 +8,9 @@ export type Pin = {
   y: number;
   price: number | null;
   label: string | null;
+  name: string | null;
+  description: string | null;
+  translations: Record<string, { name?: string; description?: string }> | null;
 };
 
 export function usePins() {
@@ -18,8 +21,19 @@ export function usePins() {
     setPins((prev) => (prev.some((existing) => existing.id === pin.id) ? prev : [...prev, pin]));
   };
 
+  const addPinsLocal = (newPins: Pin[]) => {
+    setPins((prev) => {
+      const ids = new Set(prev.map((p) => p.id));
+      return [...prev, ...newPins.filter((p) => !ids.has(p.id))];
+    });
+  };
+
   const updatePinLocal = (id: string, patch: Partial<Pin>) => {
     setPins((prev) => prev.map((pin) => (pin.id === id ? { ...pin, ...patch } : pin)));
+  };
+
+  const removePinLocal = (id: string) => {
+    setPins((prev) => prev.filter((p) => p.id !== id));
   };
 
   useEffect(() => {
@@ -28,7 +42,7 @@ export function usePins() {
     const load = async () => {
       const { data, error } = await supabase
         .from("menu_pins")
-        .select("id, page, x, y, price, label");
+        .select("id, page, x, y, price, label, name, description, translations");
       if (!mounted) return;
       if (error) console.error(error);
       else setPins((data ?? []) as Pin[]);
@@ -62,5 +76,5 @@ export function usePins() {
     };
   }, []);
 
-  return { pins, loading, addPinLocal, updatePinLocal };
+  return { pins, loading, addPinLocal, addPinsLocal, updatePinLocal, removePinLocal };
 }
