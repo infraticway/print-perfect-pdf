@@ -37,14 +37,14 @@ function Cardapio() {
               <img
                 src={page.src}
                 alt={`Cardápio página ${page.num}`}
-                className="absolute inset-0 h-full w-full object-cover"
+                className="absolute inset-0 h-full w-full select-none object-contain"
                 loading="lazy"
               />
               {pagePins.map((pin) =>
                 pin.price == null ? null : (
                   <div
                     key={pin.id}
-                    className="absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded px-1 py-px text-[clamp(7px,0.75cqi,13px)] font-bold leading-tight tracking-tight shadow-sm"
+                    className="absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded px-1 py-px text-[clamp(8px,1.4cqi,14px)] font-bold leading-tight tracking-tight shadow-sm"
                     style={{
                       left: `${pin.x}%`,
                       top: `${pin.y}%`,
