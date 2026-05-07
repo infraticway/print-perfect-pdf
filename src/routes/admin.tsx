@@ -487,39 +487,6 @@ function AdminBoard({ password, onLogout }: { password: string; onLogout: () => 
         {tab === "stats" && <StatsView />}
       </main>
 
-      {/* Render oculto para exportação PDF */}
-      <div className="fixed left-[-99999px] top-0">
-        {PAGES.map((page) => {
-          const ps = pins.filter((p) => p.page === page.num);
-          return (
-            <div
-              key={page.num}
-              id={`export-page-${page.num}`}
-              className="relative bg-white"
-              style={{ width: 1600, aspectRatio: page.aspect, containerType: "inline-size" }}
-            >
-              <img src={page.src} crossOrigin="anonymous" alt="" className="absolute inset-0 h-full w-full object-contain" />
-              {ps.map((pin) =>
-                pin.price == null ? null : (
-                  <div
-                    key={pin.id}
-                    className="absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded px-1 py-0.5 text-[14px] font-bold shadow-sm"
-                    style={{
-                      left: `${pin.x}%`,
-                      top: `${pin.y}%`,
-                      backgroundColor: "rgba(255, 248, 235, 0.95)",
-                      color: "oklch(0.58 0.18 35)",
-                      border: "1px solid oklch(0.58 0.18 35 / 0.5)",
-                    }}
-                  >
-                    {formatPrice(pin.price)}
-                  </div>
-                ),
-              )}
-            </div>
-          );
-        })}
-      </div>
     </div>
   );
 }
