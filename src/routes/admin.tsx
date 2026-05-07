@@ -325,7 +325,7 @@ function PageEditor({
           alt={`Página ${pageNum}`}
           data-bg="1"
           draggable={false}
-          className="absolute inset-0 h-full w-full select-none object-cover"
+          className="absolute inset-0 h-full w-full select-none object-contain"
         />
         {pins.map((pin) => {
           const live = dragging?.id === pin.id ? dragging : null;
