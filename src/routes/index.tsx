@@ -250,12 +250,6 @@ function Cardapio() {
 
       {/* Modal QR */}
       {showQR && <QRModal onClose={() => setShowQR(false)} />}
-
-      <footer className="py-6 text-center">
-        <Link to="/admin" className="text-[10px] text-neutral-300 hover:text-neutral-500">
-          admin
-        </Link>
-      </footer>
     </div>
   );
 }
