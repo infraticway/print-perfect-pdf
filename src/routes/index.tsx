@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { Search, X, QrCode, Globe } from "lucide-react";
 import { PAGES, formatPrice } from "@/lib/menu-data";
 import { usePins, type Pin } from "@/lib/use-pins";
@@ -173,52 +172,42 @@ function Cardapio() {
         {PAGES.filter((p) => p.num === activePage).map((page) => {
           const pagePins = pins.filter((p) => p.page === page.num);
           return (
-            <TransformWrapper
-              key={page.num}
-              initialScale={1}
-              minScale={1}
-              maxScale={4}
-              doubleClick={{ mode: "toggle", step: 1.5 }}
-              wheel={{ step: 0.2 }}
-              pinch={{ step: 5 }}
-            >
-              <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full">
-                <div
-                  className="relative w-full overflow-hidden rounded-lg bg-white shadow-sm"
-                  style={{ aspectRatio: `${page.aspect}`, containerType: "inline-size" }}
-                >
-                  <img
-                    src={page.src}
-                    alt={`Cardápio página ${page.num}`}
-                    className="absolute inset-0 h-full w-full select-none object-contain"
-                    draggable={false}
-                  />
-                  {pagePins.map((pin) => {
-                    if (pin.price == null) return null;
-                    const isMatch = matchingPinIds?.has(pin.id);
-                    const dim = matchingPinIds && !isMatch;
-                    return (
-                      <button
-                        key={pin.id}
-                        onClick={() => handlePinClick(pin)}
-                        className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer whitespace-nowrap rounded px-[0.3cqi] py-[0.1cqi] text-[1.4cqi] font-bold leading-tight tracking-tight shadow-sm transition ${
-                          isMatch ? "z-10 scale-125 ring-2 ring-orange-500" : ""
-                        } ${dim ? "opacity-30" : ""}`}
-                        style={{
-                          left: `${pin.x}%`,
-                          top: `${pin.y}%`,
-                          backgroundColor: "rgba(255, 248, 235, 0.92)",
-                          color: "oklch(0.58 0.18 35)",
-                          border: "1px solid oklch(0.58 0.18 35 / 0.35)",
-                        }}
-                      >
-                        {formatPrice(pin.price)}
-                      </button>
-                    );
-                  })}
-                </div>
-              </TransformComponent>
-            </TransformWrapper>
+            <div key={page.num} className="w-full overflow-auto touch-pan-x touch-pan-y">
+              <div
+                className="relative w-full overflow-hidden rounded-lg bg-white shadow-sm"
+                style={{ aspectRatio: `${page.aspect}`, containerType: "inline-size" }}
+              >
+                <img
+                  src={page.src}
+                  alt={`Cardápio página ${page.num}`}
+                  className="absolute inset-0 h-full w-full select-none object-contain"
+                  draggable={false}
+                />
+                {pagePins.map((pin) => {
+                  if (pin.price == null) return null;
+                  const isMatch = matchingPinIds?.has(pin.id);
+                  const dim = matchingPinIds && !isMatch;
+                  return (
+                    <button
+                      key={pin.id}
+                      onClick={() => handlePinClick(pin)}
+                      className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer whitespace-nowrap rounded px-[0.3cqi] py-[0.1cqi] text-[1.4cqi] font-bold leading-tight tracking-tight shadow-sm transition ${
+                        isMatch ? "z-10 scale-125 ring-2 ring-orange-500" : ""
+                      } ${dim ? "opacity-30" : ""}`}
+                      style={{
+                        left: `${pin.x}%`,
+                        top: `${pin.y}%`,
+                        backgroundColor: "rgba(255, 248, 235, 0.92)",
+                        color: "oklch(0.58 0.18 35)",
+                        border: "1px solid oklch(0.58 0.18 35 / 0.35)",
+                      }}
+                    >
+                      {formatPrice(pin.price)}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           );
         })}
 
