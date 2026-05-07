@@ -356,27 +356,10 @@ function AdminBoard({ password, onLogout }: { password: string; onLogout: () => 
     setExporting(true);
     toast.info("Gerando PDF...");
     try {
-      const [{ default: jsPDF }, { default: html2canvas }] = await Promise.all([
-        import("jspdf"),
-        import("html2canvas"),
-      ]);
-      const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
-      let first = true;
-      for (const page of PAGES) {
-        const node = document.getElementById(`export-page-${page.num}`);
-        if (!node) continue;
-        const canvas = await html2canvas(node, { useCORS: true, scale: 2, backgroundColor: "#ffffff" });
-        const img = canvas.toDataURL("image/jpeg", 0.85);
-        const pageW = pdf.internal.pageSize.getWidth();
-        const pageH = pdf.internal.pageSize.getHeight();
-        const ratio = canvas.width / canvas.height;
-        let w = pageW, h = pageW / ratio;
-        if (h > pageH) { h = pageH; w = pageH * ratio; }
-        if (!first) pdf.addPage();
-        first = false;
-        pdf.addImage(img, "JPEG", (pageW - w) / 2, (pageH - h) / 2, w, h);
-      }
-      pdf.save(`havanna-cardapio-${new Date().toISOString().slice(0, 10)}.pdf`);
+      const images = [];
+      for (const page of PAGES) images.push(await renderPageImage(page, pins.filter((p) => p.page === page.num)));
+      const pdf = makePdf(images);
+      downloadBlob(pdf, `havanna-cardapio-${new Date().toISOString().slice(0, 10)}.pdf`);
       toast.success("PDF baixado");
     } catch (err) {
       toast.error("Erro no PDF", { description: String(err) });
