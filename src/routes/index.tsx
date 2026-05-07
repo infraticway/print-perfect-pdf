@@ -28,6 +28,17 @@ function pinDisplayName(pin: Pin, lang: Lang): string {
   if (lang !== "pt" && pin.translations?.[lang]?.name) return pin.translations[lang]!.name!;
   return pin.name ?? pin.label ?? "";
 }
+function pinSearchHaystack(pin: Pin, lang: Lang): string {
+  const parts: string[] = [];
+  if (pin.name) parts.push(pin.name);
+  if (pin.label) parts.push(pin.label);
+  if (pin.description) parts.push(pin.description);
+  if (lang !== "pt" && pin.translations?.[lang]) {
+    if (pin.translations[lang]?.name) parts.push(pin.translations[lang]!.name!);
+    if (pin.translations[lang]?.description) parts.push(pin.translations[lang]!.description!);
+  }
+  return parts.join(" ").toLowerCase();
+}
 function pinDisplayDesc(pin: Pin, lang: Lang): string | null {
   if (lang !== "pt" && pin.translations?.[lang]?.description) return pin.translations[lang]!.description!;
   return pin.description;
@@ -57,13 +68,7 @@ function Cardapio() {
     if (!search.trim()) return null;
     const q = search.toLowerCase();
     return new Set(
-      pins
-        .filter((p) => {
-          const name = pinDisplayName(p, lang).toLowerCase();
-          const desc = (pinDisplayDesc(p, lang) ?? "").toLowerCase();
-          return name.includes(q) || desc.includes(q);
-        })
-        .map((p) => p.id),
+      pins.filter((p) => pinSearchHaystack(p, lang).includes(q)).map((p) => p.id),
     );
   }, [search, pins, lang]);
 
@@ -199,7 +204,7 @@ function Cardapio() {
                     <button
                       key={pin.id}
                       onClick={() => handlePinClick(pin)}
-                      className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer whitespace-nowrap rounded px-[0.2cqi] py-[0.05cqi] text-[0.9cqi] font-bold leading-tight tracking-tight shadow-sm transition ${
+                      className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer whitespace-nowrap rounded px-[0.15cqi] py-[0.02cqi] text-[0.7cqi] font-bold leading-none tracking-tight shadow-sm transition ${
                         isMatch ? "z-10 scale-125 ring-2 ring-orange-500" : ""
                       } ${dim ? "opacity-30" : ""}`}
                       style={{
