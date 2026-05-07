@@ -35,14 +35,15 @@ function pinDisplayDesc(pin: Pin, lang: Lang): string | null {
 
 function Cardapio() {
   const { pins, loading } = usePins();
-  const [activePage, setActivePage] = useState<number>(PAGES[0].num);
   const [search, setSearch] = useState("");
-  const [lang, setLang] = useState<Lang>(() => {
-    if (typeof window === "undefined") return "pt";
-    return (localStorage.getItem("menu_lang") as Lang) ?? "pt";
-  });
+  const [lang, setLang] = useState<Lang>("pt");
   const [selectedPin, setSelectedPin] = useState<Pin | null>(null);
   const [showQR, setShowQR] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("menu_lang") as Lang | null;
+    if (stored) setLang(stored);
+  }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined") localStorage.setItem("menu_lang", lang);
