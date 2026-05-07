@@ -95,12 +95,12 @@ async function renderPageImage(page: (typeof PAGES)[number], pins: Pin[]) {
 }
 
 function makePdf(images: Array<{ bytes: Uint8Array; width: number; height: number; aspect: number }>) {
-  const chunks: Uint8Array[] = [];
+  const chunks: BlobPart[] = [];
   const offsets: number[] = [0];
   let offset = 0;
   const push = (chunk: string | Uint8Array) => {
     const bytes = typeof chunk === "string" ? textBytes(chunk) : chunk;
-    chunks.push(bytes);
+    chunks.push(typeof chunk === "string" ? chunk : new Uint8Array(bytes));
     offset += bytes.length;
   };
   const startObject = (id: number) => {
