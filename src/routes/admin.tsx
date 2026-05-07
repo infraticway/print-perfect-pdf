@@ -340,7 +340,7 @@ function PageEditor({
               onPointerMove={moveDrag}
               onPointerUp={endDrag}
               onPointerCancel={endDrag}
-              className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-grab whitespace-nowrap rounded px-1 py-px text-[clamp(7px,0.75cqi,13px)] font-bold leading-tight tracking-tight shadow-sm active:cursor-grabbing ${
+              className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-grab whitespace-nowrap rounded px-[0.3cqi] py-[0.1cqi] text-[1.4cqi] font-bold leading-tight tracking-tight shadow-sm active:cursor-grabbing ${
                 isSelected ? "z-20 ring-2 ring-orange-500 ring-offset-1" : "z-10"
               }`}
               style={{
