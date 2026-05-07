@@ -29,10 +29,6 @@ function parseInput(v: string): number | null {
   return isNaN(n) ? null : n;
 }
 
-function encodePdfText(text: string) {
-  return text.replace(/[\\()]/g, "\\$&").replace(/[\r\n]+/g, " ");
-}
-
 function textBytes(text: string) {
   return new TextEncoder().encode(text);
 }
