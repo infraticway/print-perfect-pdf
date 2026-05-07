@@ -14,33 +14,80 @@ export type Database = {
   }
   public: {
     Tables: {
+      menu_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          language: string | null
+          page: number | null
+          pin_id: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          language?: string | null
+          page?: number | null
+          pin_id?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          language?: string | null
+          page?: number | null
+          pin_id?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "menu_events_pin_id_fkey"
+            columns: ["pin_id"]
+            isOneToOne: false
+            referencedRelation: "menu_pins"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       menu_pins: {
         Row: {
           created_at: string
+          description: string | null
           id: string
           label: string | null
+          name: string | null
           page: number
           price: number | null
+          translations: Json | null
           updated_at: string
           x: number
           y: number
         }
         Insert: {
           created_at?: string
+          description?: string | null
           id?: string
           label?: string | null
+          name?: string | null
           page: number
           price?: number | null
+          translations?: Json | null
           updated_at?: string
           x: number
           y: number
         }
         Update: {
           created_at?: string
+          description?: string | null
           id?: string
           label?: string | null
+          name?: string | null
           page?: number
           price?: number | null
+          translations?: Json | null
           updated_at?: string
           x?: number
           y?: number
