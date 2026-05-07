@@ -204,7 +204,7 @@ function Cardapio() {
                     <button
                       key={pin.id}
                       onClick={() => handlePinClick(pin)}
-                      className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer whitespace-nowrap rounded px-[0.2cqi] py-[0.05cqi] text-[0.9cqi] font-bold leading-tight tracking-tight shadow-sm transition ${
+                      className={`absolute -translate-y-1/2 cursor-pointer whitespace-nowrap rounded px-[0.15cqi] py-[0.02cqi] text-[0.7cqi] font-bold leading-none tracking-tight shadow-sm transition ${
                         isMatch ? "z-10 scale-125 ring-2 ring-orange-500" : ""
                       } ${dim ? "opacity-30" : ""}`}
                       style={{
