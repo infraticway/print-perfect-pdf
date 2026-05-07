@@ -28,6 +28,17 @@ function pinDisplayName(pin: Pin, lang: Lang): string {
   if (lang !== "pt" && pin.translations?.[lang]?.name) return pin.translations[lang]!.name!;
   return pin.name ?? pin.label ?? "";
 }
+function pinSearchHaystack(pin: Pin, lang: Lang): string {
+  const parts: string[] = [];
+  if (pin.name) parts.push(pin.name);
+  if (pin.label) parts.push(pin.label);
+  if (pin.description) parts.push(pin.description);
+  if (lang !== "pt" && pin.translations?.[lang]) {
+    if (pin.translations[lang]?.name) parts.push(pin.translations[lang]!.name!);
+    if (pin.translations[lang]?.description) parts.push(pin.translations[lang]!.description!);
+  }
+  return parts.join(" ").toLowerCase();
+}
 function pinDisplayDesc(pin: Pin, lang: Lang): string | null {
   if (lang !== "pt" && pin.translations?.[lang]?.description) return pin.translations[lang]!.description!;
   return pin.description;
