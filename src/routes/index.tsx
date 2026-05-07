@@ -5,6 +5,7 @@ import { PAGES, formatPrice } from "@/lib/menu-data";
 import { usePins, type Pin } from "@/lib/use-pins";
 import { trackEvent } from "@/lib/analytics";
 import { Input } from "@/components/ui/input";
+import { NativeQRCode } from "@/components/native-qr-code";
 
 export const Route = createFileRoute("/")({
   component: Cardapio,
@@ -261,10 +262,6 @@ function Cardapio() {
 }
 
 function QRModal({ onClose }: { onClose: () => void }) {
-  const [QRCode, setQRCode] = useState<React.ComponentType<{ value: string; size: number }> | null>(null);
-  useEffect(() => {
-    import("qrcode.react").then((m) => setQRCode(() => m.QRCodeSVG));
-  }, []);
   const url = typeof window !== "undefined" ? window.location.origin : "";
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
@@ -277,7 +274,7 @@ function QRModal({ onClose }: { onClose: () => void }) {
         </h3>
         <p className="mb-4 text-xs text-neutral-500">Aponte a câmera para acessar</p>
         <div className="flex justify-center rounded-lg bg-white p-3">
-          {QRCode ? <QRCode value={url} size={200} /> : <div className="h-[200px] w-[200px]" />}
+          <NativeQRCode value={url} size={200} />
         </div>
         <p className="mt-3 break-all text-[10px] text-neutral-400">{url}</p>
         <button

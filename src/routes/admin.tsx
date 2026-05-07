@@ -20,11 +20,137 @@ export const Route = createFileRoute("/admin")({
 });
 
 const PASSWORD_KEY = "havanna_admin_pwd";
+const PDF_A4_LANDSCAPE = { width: 841.89, height: 595.28 };
+const PDF_A4_PORTRAIT = { width: 595.28, height: 841.89 };
 
 function parseInput(v: string): number | null {
   if (!v.trim()) return null;
   const n = parseFloat(v.replace(/\./g, "").replace(",", "."));
   return isNaN(n) ? null : n;
+}
+
+function textBytes(text: string) {
+  return new TextEncoder().encode(text);
+}
+
+function base64ToBytes(value: string) {
+  const raw = atob(value.split(",")[1] ?? value);
+  const bytes = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
+  return bytes;
+}
+
+async function loadImage(src: string) {
+  const image = new Image();
+  image.decoding = "async";
+  image.src = src;
+  await image.decode();
+  return image;
+}
+
+async function renderPageImage(page: (typeof PAGES)[number], pins: Pin[]) {
+  const width = 1600;
+  const height = Math.round(width / page.aspect);
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Canvas indisponível");
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, width, height);
+  const img = await loadImage(page.src);
+  const ratio = Math.min(width / img.naturalWidth, height / img.naturalHeight);
+  const drawW = img.naturalWidth * ratio;
+  const drawH = img.naturalHeight * ratio;
+  const drawX = (width - drawW) / 2;
+  const drawY = (height - drawH) / 2;
+  ctx.drawImage(img, drawX, drawY, drawW, drawH);
+
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.font = "bold 22px Arial, sans-serif";
+  pins.forEach((pin) => {
+    if (pin.price == null) return;
+    const text = formatPrice(pin.price);
+    const x = (pin.x / 100) * width;
+    const y = (pin.y / 100) * height;
+    const metrics = ctx.measureText(text);
+    const badgeW = metrics.width + 18;
+    const badgeH = 30;
+    ctx.fillStyle = "rgba(255, 248, 235, 0.96)";
+    ctx.strokeStyle = "#9b3f18";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(x - badgeW / 2, y - badgeH / 2, badgeW, badgeH, 5);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#9b3f18";
+    ctx.fillText(text, x, y + 1);
+  });
+  return { bytes: base64ToBytes(canvas.toDataURL("image/jpeg", 0.86)), width, height, aspect: page.aspect };
+}
+
+function makePdf(images: Array<{ bytes: Uint8Array; width: number; height: number; aspect: number }>) {
+  const chunks: BlobPart[] = [];
+  const offsets: number[] = [0];
+  let offset = 0;
+  const push = (chunk: string | Uint8Array) => {
+    const bytes = typeof chunk === "string" ? textBytes(chunk) : chunk;
+    chunks.push(typeof chunk === "string" ? chunk : new Uint8Array(bytes));
+    offset += bytes.length;
+  };
+  const startObject = (id: number) => {
+    offsets[id] = offset;
+    push(`${id} 0 obj\n`);
+  };
+
+  const pageIds = images.map((_, i) => 3 + i * 3);
+  push("%PDF-1.3\n%\xFF\xFF\xFF\xFF\n");
+  startObject(1);
+  push("<< /Type /Catalog /Pages 2 0 R >>\nendobj\n");
+  startObject(2);
+  push(`<< /Type /Pages /Kids [${pageIds.map((id) => `${id} 0 R`).join(" ")}] /Count ${pageIds.length} >>\nendobj\n`);
+
+  images.forEach((image, i) => {
+    const pageId = 3 + i * 3;
+    const contentId = pageId + 1;
+    const imageId = pageId + 2;
+    const pageSize = image.aspect >= 1 ? PDF_A4_LANDSCAPE : PDF_A4_PORTRAIT;
+    const imageRatio = image.width / image.height;
+    let drawW = pageSize.width;
+    let drawH = drawW / imageRatio;
+    if (drawH > pageSize.height) {
+      drawH = pageSize.height;
+      drawW = drawH * imageRatio;
+    }
+    const x = (pageSize.width - drawW) / 2;
+    const y = (pageSize.height - drawH) / 2;
+    const commands = `q\n${drawW.toFixed(2)} 0 0 ${drawH.toFixed(2)} ${x.toFixed(2)} ${y.toFixed(2)} cm\n/Im${i + 1} Do\nQ\n`;
+
+    startObject(pageId);
+    push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageSize.width} ${pageSize.height}] /Resources << /XObject << /Im${i + 1} ${imageId} 0 R >> >> /Contents ${contentId} 0 R >>\nendobj\n`);
+    startObject(contentId);
+    push(`<< /Length ${textBytes(commands).length} >>\nstream\n${commands}endstream\nendobj\n`);
+    startObject(imageId);
+    push(`<< /Type /XObject /Subtype /Image /Width ${image.width} /Height ${image.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${image.bytes.length} >>\nstream\n`);
+    push(image.bytes);
+    push("\nendstream\nendobj\n");
+  });
+
+  const xref = offset;
+  push(`xref\n0 ${offsets.length}\n0000000000 65535 f \n`);
+  for (let i = 1; i < offsets.length; i++) push(`${String(offsets[i]).padStart(10, "0")} 00000 n \n`);
+  push(`trailer\n<< /Size ${offsets.length} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`);
+  return new Blob(chunks, { type: "application/pdf" });
+}
+
+function downloadBlob(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 function Admin() {
@@ -226,27 +352,10 @@ function AdminBoard({ password, onLogout }: { password: string; onLogout: () => 
     setExporting(true);
     toast.info("Gerando PDF...");
     try {
-      const [{ default: jsPDF }, { default: html2canvas }] = await Promise.all([
-        import("jspdf"),
-        import("html2canvas"),
-      ]);
-      const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
-      let first = true;
-      for (const page of PAGES) {
-        const node = document.getElementById(`export-page-${page.num}`);
-        if (!node) continue;
-        const canvas = await html2canvas(node, { useCORS: true, scale: 2, backgroundColor: "#ffffff" });
-        const img = canvas.toDataURL("image/jpeg", 0.85);
-        const pageW = pdf.internal.pageSize.getWidth();
-        const pageH = pdf.internal.pageSize.getHeight();
-        const ratio = canvas.width / canvas.height;
-        let w = pageW, h = pageW / ratio;
-        if (h > pageH) { h = pageH; w = pageH * ratio; }
-        if (!first) pdf.addPage();
-        first = false;
-        pdf.addImage(img, "JPEG", (pageW - w) / 2, (pageH - h) / 2, w, h);
-      }
-      pdf.save(`havanna-cardapio-${new Date().toISOString().slice(0, 10)}.pdf`);
+      const images = [];
+      for (const page of PAGES) images.push(await renderPageImage(page, pins.filter((p) => p.page === page.num)));
+      const pdf = makePdf(images);
+      downloadBlob(pdf, `havanna-cardapio-${new Date().toISOString().slice(0, 10)}.pdf`);
       toast.success("PDF baixado");
     } catch (err) {
       toast.error("Erro no PDF", { description: String(err) });
@@ -374,39 +483,6 @@ function AdminBoard({ password, onLogout }: { password: string; onLogout: () => 
         {tab === "stats" && <StatsView />}
       </main>
 
-      {/* Render oculto para exportação PDF */}
-      <div className="fixed left-[-99999px] top-0">
-        {PAGES.map((page) => {
-          const ps = pins.filter((p) => p.page === page.num);
-          return (
-            <div
-              key={page.num}
-              id={`export-page-${page.num}`}
-              className="relative bg-white"
-              style={{ width: 1600, aspectRatio: page.aspect, containerType: "inline-size" }}
-            >
-              <img src={page.src} crossOrigin="anonymous" alt="" className="absolute inset-0 h-full w-full object-contain" />
-              {ps.map((pin) =>
-                pin.price == null ? null : (
-                  <div
-                    key={pin.id}
-                    className="absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded px-1 py-0.5 text-[14px] font-bold shadow-sm"
-                    style={{
-                      left: `${pin.x}%`,
-                      top: `${pin.y}%`,
-                      backgroundColor: "rgba(255, 248, 235, 0.95)",
-                      color: "oklch(0.58 0.18 35)",
-                      border: "1px solid oklch(0.58 0.18 35 / 0.5)",
-                    }}
-                  >
-                    {formatPrice(pin.price)}
-                  </div>
-                ),
-              )}
-            </div>
-          );
-        })}
-      </div>
     </div>
   );
 }
