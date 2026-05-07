@@ -68,13 +68,7 @@ function Cardapio() {
     if (!search.trim()) return null;
     const q = search.toLowerCase();
     return new Set(
-      pins
-        .filter((p) => {
-          const name = pinDisplayName(p, lang).toLowerCase();
-          const desc = (pinDisplayDesc(p, lang) ?? "").toLowerCase();
-          return name.includes(q) || desc.includes(q);
-        })
-        .map((p) => p.id),
+      pins.filter((p) => pinSearchHaystack(p, lang).includes(q)).map((p) => p.id),
     );
   }, [search, pins, lang]);
 
