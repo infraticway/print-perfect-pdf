@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { Search, X, QrCode, Globe } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { Search, X, QrCode } from "lucide-react";
 import { PAGES, formatPrice } from "@/lib/menu-data";
 import { usePins, type Pin } from "@/lib/use-pins";
 import { trackEvent } from "@/lib/analytics";
@@ -35,14 +35,15 @@ function pinDisplayDesc(pin: Pin, lang: Lang): string | null {
 
 function Cardapio() {
   const { pins, loading } = usePins();
-  const [activePage, setActivePage] = useState<number>(PAGES[0].num);
   const [search, setSearch] = useState("");
-  const [lang, setLang] = useState<Lang>(() => {
-    if (typeof window === "undefined") return "pt";
-    return (localStorage.getItem("menu_lang") as Lang) ?? "pt";
-  });
+  const [lang, setLang] = useState<Lang>("pt");
   const [selectedPin, setSelectedPin] = useState<Pin | null>(null);
   const [showQR, setShowQR] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("menu_lang") as Lang | null;
+    if (stored) setLang(stored);
+  }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined") localStorage.setItem("menu_lang", lang);
@@ -143,7 +144,7 @@ function Cardapio() {
           </div>
         </div>
 
-        {/* Tabs de seções */}
+        {/* Tabs de seções (âncoras de rolagem) */}
         <nav className="flex gap-1 overflow-x-auto border-t border-neutral-100 px-2 py-1.5">
           {PAGES.map((p) => {
             const hasMatch = matchingPagesFromSearch?.has(p.num);
@@ -151,13 +152,15 @@ function Cardapio() {
             return (
               <button
                 key={p.num}
-                onClick={() => setActivePage(p.num)}
+                onClick={() => {
+                  document
+                    .getElementById(`page-${p.num}`)
+                    ?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
                 className={`shrink-0 rounded-full px-3 py-1 text-[11px] font-medium transition ${
-                  activePage === p.num
-                    ? "bg-neutral-900 text-white"
-                    : dim
-                      ? "bg-neutral-50 text-neutral-300"
-                      : "bg-white text-neutral-600 hover:bg-neutral-100"
+                  dim
+                    ? "bg-neutral-50 text-neutral-300"
+                    : "bg-white text-neutral-600 hover:bg-neutral-100"
                 } ${hasMatch ? "ring-1 ring-orange-400" : "border border-neutral-200"}`}
               >
                 {SECTION_LABEL_FALLBACK[p.num] ?? `Pág ${p.num}`}
@@ -167,13 +170,17 @@ function Cardapio() {
         </nav>
       </header>
 
-      <main className="mx-auto max-w-5xl p-2 sm:p-4">
+      <main className="mx-auto max-w-5xl space-y-4 p-2 sm:p-4">
         {loading && <p className="text-center text-sm text-neutral-500">Carregando...</p>}
 
-        {PAGES.filter((p) => p.num === activePage).map((page) => {
+        {PAGES.map((page) => {
           const pagePins = pins.filter((p) => p.page === page.num);
           return (
-            <div key={page.num} className="w-full overflow-auto touch-pan-x touch-pan-y">
+            <div
+              key={page.num}
+              id={`page-${page.num}`}
+              className="w-full scroll-mt-40"
+            >
               <div
                 className="relative w-full overflow-hidden rounded-lg bg-white shadow-sm"
                 style={{ aspectRatio: `${page.aspect}`, containerType: "inline-size" }}
@@ -211,14 +218,6 @@ function Cardapio() {
             </div>
           );
         })}
-
-        <p className="mt-3 text-center text-[11px] text-neutral-400">
-          {lang === "en"
-            ? "Pinch / double-tap to zoom"
-            : lang === "es"
-              ? "Pellizca o toca dos veces para hacer zoom"
-              : "Use pinça ou toque duplo para dar zoom"}
-        </p>
       </main>
 
       {/* Modal de detalhe do item */}
@@ -251,12 +250,6 @@ function Cardapio() {
 
       {/* Modal QR */}
       {showQR && <QRModal onClose={() => setShowQR(false)} />}
-
-      <footer className="py-6 text-center">
-        <Link to="/admin" className="text-[10px] text-neutral-300 hover:text-neutral-500">
-          admin
-        </Link>
-      </footer>
     </div>
   );
 }
