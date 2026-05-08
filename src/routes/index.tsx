@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Search, X, QrCode } from "lucide-react";
+import { X, QrCode } from "lucide-react";
 import { PAGES, formatPrice } from "@/lib/menu-data";
 import { usePins, type Pin } from "@/lib/use-pins";
 import { trackEvent } from "@/lib/analytics";
-import { Input } from "@/components/ui/input";
 import { NativeQRCode } from "@/components/native-qr-code";
 
 export const Route = createFileRoute("/")({
@@ -99,19 +98,6 @@ function Cardapio() {
             </p>
           </div>
           <div className="flex items-center gap-1">
-            <div className="flex overflow-hidden rounded-md border border-neutral-200">
-              {(Object.keys(LANG_LABELS) as Lang[]).map((l) => (
-                <button
-                  key={l}
-                  onClick={() => setLang(l)}
-                  className={`px-2 py-1 text-[11px] font-semibold transition ${
-                    lang === l ? "bg-neutral-900 text-white" : "bg-white text-neutral-600 hover:bg-neutral-50"
-                  }`}
-                >
-                  {LANG_LABELS[l]}
-                </button>
-              ))}
-            </div>
             <button
               onClick={() => setShowQR(true)}
               aria-label="QR Code"
@@ -119,33 +105,6 @@ function Cardapio() {
             >
               <QrCode className="h-4 w-4" />
             </button>
-          </div>
-        </div>
-
-        {/* Busca */}
-        <div className="border-t border-neutral-100 px-3 py-2">
-          <div className="relative">
-            <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={
-                lang === "en"
-                  ? "Search items..."
-                  : lang === "es"
-                    ? "Buscar items..."
-                    : "Buscar item..."
-              }
-              className="h-9 pl-8 pr-8 text-sm"
-            />
-            {search && (
-              <button
-                onClick={() => setSearch("")}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            )}
           </div>
         </div>
 
