@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Search, X, QrCode } from "lucide-react";
+import { X, QrCode } from "lucide-react";
 import { PAGES, formatPrice } from "@/lib/menu-data";
 import { usePins, type Pin } from "@/lib/use-pins";
 import { trackEvent } from "@/lib/analytics";
-import { Input } from "@/components/ui/input";
 import { NativeQRCode } from "@/components/native-qr-code";
 
 export const Route = createFileRoute("/")({
