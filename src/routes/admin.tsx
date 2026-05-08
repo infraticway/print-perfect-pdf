@@ -645,15 +645,17 @@ function PageEditor({
               onPointerMove={moveDrag}
               onPointerUp={endDrag}
               onPointerCancel={endDrag}
-              className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-grab whitespace-nowrap rounded px-[0.3cqi] py-[0.1cqi] text-[1.4cqi] font-bold leading-tight tracking-tight shadow-sm active:cursor-grabbing ${
+              className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-grab whitespace-nowrap rounded font-bold leading-none tracking-tight shadow-sm active:cursor-grabbing ${
                 isSelected ? "z-20 ring-2 ring-orange-500 ring-offset-1" : "z-10"
               }`}
               style={{
                 left: `${x}%`,
                 top: `${y}%`,
-                backgroundColor: hasPrice ? "rgba(255, 248, 235, 0.95)" : "rgba(255, 220, 180, 0.95)",
+                backgroundColor: hasPrice ? "rgb(255, 248, 235)" : "rgb(255, 220, 180)",
                 color: "oklch(0.45 0.18 35)",
                 border: `1px solid oklch(0.58 0.18 35 / ${hasPrice ? 0.5 : 0.8})`,
+                padding: "2px 4px",
+                fontSize: "clamp(9px, 1.1cqi, 13px)",
                 touchAction: "none",
               }}
               title={pin.name ?? undefined}
