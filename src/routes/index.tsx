@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { X, QrCode } from "lucide-react";
+import { X, QrCode, Minus, Plus } from "lucide-react";
 import { PAGES, formatPrice } from "@/lib/menu-data";
 import { usePins, type Pin } from "@/lib/use-pins";
 import { trackEvent } from "@/lib/analytics";
@@ -12,7 +12,6 @@ export const Route = createFileRoute("/")({
 
 type Lang = "pt" | "en" | "es";
 
-const LANG_LABELS: Record<Lang, string> = { pt: "PT", en: "EN", es: "ES" };
 const SECTION_LABEL_FALLBACK: Record<number, string> = {
   1: "Capa",
   2: "Bebidas Quentes",
@@ -22,6 +21,14 @@ const SECTION_LABEL_FALLBACK: Record<number, string> = {
   6: "Alfajores & Para Levar",
   7: "Sobre",
 };
+
+const PIN_SCALE_KEY = "menu_pin_scale";
+const PIN_SCALE_MIN = 0.6;
+const PIN_SCALE_MAX = 1.6;
+const PIN_SCALE_STEP = 0.15;
+
+const BRAND = "oklch(0.55 0.16 38)";
+const BRAND_DEEP = "oklch(0.42 0.14 38)";
 
 function pinDisplayName(pin: Pin, lang: Lang): string {
   if (lang !== "pt" && pin.translations?.[lang]?.name) return pin.translations[lang]!.name!;
@@ -43,21 +50,35 @@ function pinDisplayDesc(pin: Pin, lang: Lang): string | null {
   return pin.description;
 }
 
+function clampScale(v: number) {
+  return Math.max(PIN_SCALE_MIN, Math.min(PIN_SCALE_MAX, parseFloat(v.toFixed(2))));
+}
+
 function Cardapio() {
   const { pins, loading } = usePins();
-  const [search, setSearch] = useState("");
+  const [search] = useState("");
   const [lang, setLang] = useState<Lang>("pt");
   const [selectedPin, setSelectedPin] = useState<Pin | null>(null);
   const [showQR, setShowQR] = useState(false);
+  const [pinScale, setPinScale] = useState<number>(1);
 
   useEffect(() => {
-    const stored = localStorage.getItem("menu_lang") as Lang | null;
-    if (stored) setLang(stored);
+    const storedLang = localStorage.getItem("menu_lang") as Lang | null;
+    if (storedLang) setLang(storedLang);
+    const storedScale = localStorage.getItem(PIN_SCALE_KEY);
+    if (storedScale) {
+      const n = parseFloat(storedScale);
+      if (!Number.isNaN(n)) setPinScale(clampScale(n));
+    }
   }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined") localStorage.setItem("menu_lang", lang);
   }, [lang]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") localStorage.setItem(PIN_SCALE_KEY, String(pinScale));
+  }, [pinScale]);
 
   useEffect(() => {
     trackEvent("view", { language: lang });
@@ -85,31 +106,61 @@ function Cardapio() {
     trackEvent("pin_click", { pin_id: pin.id, page: pin.page, language: lang });
   };
 
+  const decreaseScale = () => setPinScale((s) => clampScale(s - PIN_SCALE_STEP));
+  const increaseScale = () => setPinScale((s) => clampScale(s + PIN_SCALE_STEP));
+
   return (
-    <div className="min-h-screen bg-neutral-100">
-      <header className="sticky top-0 z-30 border-b border-neutral-200 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-3 py-2 sm:py-3">
+    <div className="min-h-screen bg-stone-100">
+      <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-white/90 shadow-[0_1px_2px_rgba(0,0,0,0.03)] backdrop-blur-md">
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-2.5 sm:py-3">
           <div className="min-w-0">
-            <h1 className="truncate text-base font-bold tracking-tight" style={{ color: "oklch(0.58 0.18 35)" }}>
+            <h1
+              className="truncate text-[15px] font-bold leading-tight tracking-[0.18em] sm:text-base"
+              style={{ color: BRAND }}
+            >
               HAVANNA
             </h1>
-            <p className="truncate text-[10px] uppercase tracking-widest text-neutral-500">
+            <p className="truncate text-[9px] font-medium uppercase tracking-[0.25em] text-stone-400 sm:text-[10px]">
               Cafeteria Argentina
             </p>
           </div>
-          <div className="flex items-center gap-1">
+
+          <div className="flex items-center gap-1.5">
+            {/* Controle de tamanho do pino */}
+            <div className="flex items-center overflow-hidden rounded-full border border-stone-200 bg-white">
+              <button
+                onClick={decreaseScale}
+                disabled={pinScale <= PIN_SCALE_MIN + 0.001}
+                aria-label="Diminuir preços"
+                className="flex h-7 w-7 items-center justify-center text-stone-500 hover:bg-stone-50 disabled:opacity-30"
+              >
+                <Minus className="h-3.5 w-3.5" />
+              </button>
+              <span className="min-w-[34px] border-x border-stone-200 px-1 text-center text-[10px] font-semibold tabular-nums text-stone-500">
+                {Math.round(pinScale * 100)}%
+              </span>
+              <button
+                onClick={increaseScale}
+                disabled={pinScale >= PIN_SCALE_MAX - 0.001}
+                aria-label="Aumentar preços"
+                className="flex h-7 w-7 items-center justify-center text-stone-500 hover:bg-stone-50 disabled:opacity-30"
+              >
+                <Plus className="h-3.5 w-3.5" />
+              </button>
+            </div>
+
             <button
               onClick={() => setShowQR(true)}
               aria-label="QR Code"
-              className="rounded-md border border-neutral-200 bg-white p-1.5 text-neutral-600 hover:bg-neutral-50"
+              className="flex h-7 w-7 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-500 hover:bg-stone-50"
             >
-              <QrCode className="h-4 w-4" />
+              <QrCode className="h-3.5 w-3.5" />
             </button>
           </div>
         </div>
 
         {/* Tabs de seções (âncoras de rolagem) */}
-        <nav className="flex gap-1 overflow-x-auto border-t border-neutral-100 px-2 py-1.5">
+        <nav className="flex gap-1.5 overflow-x-auto border-t border-stone-100 px-3 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {PAGES.map((p) => {
             const hasMatch = matchingPagesFromSearch?.has(p.num);
             const dim = matchingPagesFromSearch && !hasMatch;
@@ -121,11 +172,12 @@ function Cardapio() {
                     .getElementById(`page-${p.num}`)
                     ?.scrollIntoView({ behavior: "smooth", block: "start" });
                 }}
-                className={`shrink-0 rounded-full px-3 py-1 text-[11px] font-medium transition ${
+                className={`shrink-0 rounded-full border px-3 py-1 text-[11px] font-medium tracking-wide transition ${
                   dim
-                    ? "bg-neutral-50 text-neutral-300"
-                    : "bg-white text-neutral-600 hover:bg-neutral-100"
-                } ${hasMatch ? "ring-1 ring-orange-400" : "border border-neutral-200"}`}
+                    ? "border-stone-100 bg-stone-50 text-stone-300"
+                    : "border-stone-200 bg-white text-stone-600 hover:border-stone-300 hover:text-stone-900"
+                } ${hasMatch ? "ring-1 ring-offset-1" : ""}`}
+                style={hasMatch ? { boxShadow: `inset 0 0 0 1px ${BRAND}` } : undefined}
               >
                 {SECTION_LABEL_FALLBACK[p.num] ?? `Pág ${p.num}`}
               </button>
@@ -134,19 +186,19 @@ function Cardapio() {
         </nav>
       </header>
 
-      <main className="mx-auto max-w-5xl space-y-4 p-2 sm:p-4">
-        {loading && <p className="text-center text-sm text-neutral-500">Carregando...</p>}
+      <main className="mx-auto max-w-5xl space-y-3 p-2 sm:space-y-4 sm:p-4">
+        {loading && <p className="text-center text-sm text-stone-500">Carregando...</p>}
 
         {PAGES.map((page) => {
           const pagePins = pins.filter((p) => p.page === page.num);
           return (
-            <div
+            <section
               key={page.num}
               id={`page-${page.num}`}
-              className="w-full scroll-mt-40"
+              className="w-full scroll-mt-32"
             >
               <div
-                className="relative w-full overflow-hidden rounded-lg bg-white shadow-sm"
+                className="relative w-full overflow-hidden rounded-xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_16px_-8px_rgba(0,0,0,0.08)] ring-1 ring-stone-200/60"
                 style={{ aspectRatio: `${page.aspect}`, containerType: "inline-size" }}
               >
                 <img
@@ -166,17 +218,19 @@ function Cardapio() {
                       key={pin.id}
                       onClick={() => handlePinClick(pin)}
                       aria-label={pinDisplayName(pin, lang) || formatPrice(pin.price)}
-                      className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer whitespace-nowrap rounded font-bold leading-none tracking-tight shadow-sm transition ${
-                        isMatch ? "z-10 scale-125 ring-2 ring-orange-500" : ""
-                      } ${dim ? "opacity-30" : ""}`}
+                      className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer whitespace-nowrap rounded-[4px] font-semibold leading-none tabular-nums tracking-tight transition-transform duration-150 hover:scale-110 active:scale-95 ${
+                        isMatch ? "z-10 scale-125 ring-2 ring-offset-1" : ""
+                      } ${dim ? "opacity-25" : ""}`}
                       style={{
                         left: `${pin.x}%`,
                         top: `${pin.y}%`,
-                        backgroundColor: "rgb(255, 248, 235)",
-                        color: "oklch(0.58 0.18 35)",
-                        border: "1px solid oklch(0.58 0.18 35 / 0.45)",
-                        padding: "1px 3px",
-                        fontSize: "clamp(7px, 0.85cqi, 11px)",
+                        backgroundColor: "#fffaf0",
+                        color: BRAND_DEEP,
+                        border: `1px solid ${BRAND}`,
+                        padding: `${1 * pinScale}px ${3 * pinScale}px`,
+                        fontSize: `clamp(${6 * pinScale}px, ${0.85 * pinScale}cqi, ${11 * pinScale}px)`,
+                        boxShadow: "0 1px 2px rgba(80, 30, 0, 0.15)",
+                        ...(isMatch ? { ["--tw-ring-color" as string]: BRAND } : {}),
                       }}
                     >
                       {formatPrice(pin.price)}
@@ -184,7 +238,7 @@ function Cardapio() {
                   );
                 })}
               </div>
-            </div>
+            </section>
           );
         })}
       </main>
@@ -192,27 +246,51 @@ function Cardapio() {
       {/* Modal de detalhe do item */}
       {selectedPin && (
         <div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center"
+          className="fixed inset-0 z-50 flex items-end justify-center bg-stone-950/50 p-4 backdrop-blur-sm sm:items-center"
           onClick={() => setSelectedPin(null)}
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-sm rounded-t-2xl bg-white p-5 shadow-2xl sm:rounded-2xl"
+            className="w-full max-w-sm overflow-hidden rounded-t-2xl bg-white shadow-2xl ring-1 ring-stone-200 sm:rounded-2xl"
           >
-            <div className="mb-2 flex items-start justify-between gap-2">
-              <h3 className="text-lg font-bold leading-tight" style={{ color: "oklch(0.45 0.18 35)" }}>
-                {pinDisplayName(selectedPin, lang) || formatPrice(selectedPin.price)}
-              </h3>
-              <button onClick={() => setSelectedPin(null)} className="text-neutral-400 hover:text-neutral-700">
-                <X className="h-5 w-5" />
-              </button>
+            <div className="px-5 pb-4 pt-5">
+              <div className="mb-3 flex items-start justify-between gap-3">
+                <div className="min-w-0 flex-1">
+                  <p
+                    className="mb-1 text-[10px] font-semibold uppercase tracking-[0.2em]"
+                    style={{ color: BRAND }}
+                  >
+                    Item do cardápio
+                  </p>
+                  <h3
+                    className="text-xl font-bold leading-tight tracking-tight"
+                    style={{ color: BRAND_DEEP }}
+                  >
+                    {pinDisplayName(selectedPin, lang) || formatPrice(selectedPin.price)}
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setSelectedPin(null)}
+                  aria-label="Fechar"
+                  className="-mr-1 -mt-1 rounded-full p-1.5 text-stone-400 hover:bg-stone-100 hover:text-stone-700"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              {pinDisplayDesc(selectedPin, lang) && (
+                <p className="mb-4 text-sm leading-relaxed text-stone-600">
+                  {pinDisplayDesc(selectedPin, lang)}
+                </p>
+              )}
+              <div className="flex items-baseline gap-2 border-t border-stone-100 pt-3">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-stone-400">
+                  Preço
+                </span>
+                <span className="text-2xl font-bold tabular-nums" style={{ color: BRAND }}>
+                  {formatPrice(selectedPin.price)}
+                </span>
+              </div>
             </div>
-            {pinDisplayDesc(selectedPin, lang) && (
-              <p className="mb-3 text-sm text-neutral-600">{pinDisplayDesc(selectedPin, lang)}</p>
-            )}
-            <p className="text-2xl font-bold" style={{ color: "oklch(0.58 0.18 35)" }}>
-              {formatPrice(selectedPin.price)}
-            </p>
           </div>
         </div>
       )}
@@ -226,25 +304,32 @@ function Cardapio() {
 function QRModal({ onClose }: { onClose: () => void }) {
   const url = typeof window !== "undefined" ? window.location.origin : "";
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/60 p-4 backdrop-blur-sm"
+      onClick={onClose}
+    >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-xs rounded-2xl bg-white p-6 text-center shadow-2xl"
+        className="w-full max-w-xs overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-stone-200"
       >
-        <h3 className="mb-1 text-base font-bold" style={{ color: "oklch(0.58 0.18 35)" }}>
-          HAVANNA
-        </h3>
-        <p className="mb-4 text-xs text-neutral-500">Aponte a câmera para acessar</p>
-        <div className="flex justify-center rounded-lg bg-white p-3">
-          <NativeQRCode value={url} size={200} />
+        <div className="px-6 pb-5 pt-6 text-center">
+          <h3 className="text-sm font-bold tracking-[0.18em]" style={{ color: BRAND }}>
+            HAVANNA
+          </h3>
+          <p className="mb-4 mt-0.5 text-[10px] font-medium uppercase tracking-[0.2em] text-stone-400">
+            Aponte a câmera
+          </p>
+          <div className="flex justify-center rounded-xl border border-stone-100 bg-white p-3">
+            <NativeQRCode value={url} size={200} />
+          </div>
+          <p className="mt-3 break-all text-[10px] text-stone-400">{url}</p>
+          <button
+            onClick={onClose}
+            className="mt-4 w-full rounded-md bg-stone-900 py-2 text-xs font-semibold tracking-wide text-white hover:bg-stone-800"
+          >
+            Fechar
+          </button>
         </div>
-        <p className="mt-3 break-all text-[10px] text-neutral-400">{url}</p>
-        <button
-          onClick={onClose}
-          className="mt-4 w-full rounded-md bg-neutral-900 py-2 text-xs font-semibold text-white hover:bg-neutral-800"
-        >
-          Fechar
-        </button>
       </div>
     </div>
   );
