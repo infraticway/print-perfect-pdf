@@ -172,7 +172,7 @@ function Cardapio() {
                       style={{
                         left: `${pin.x}%`,
                         top: `${pin.y}%`,
-                        backgroundColor: "rgba(255, 248, 235, 0.95)",
+                        backgroundColor: "rgb(255, 248, 235)",
                         color: "oklch(0.58 0.18 35)",
                         border: "1px solid oklch(0.58 0.18 35 / 0.45)",
                         padding: "2px 4px",
