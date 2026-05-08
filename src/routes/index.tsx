@@ -206,15 +206,18 @@ function Cardapio() {
                     <button
                       key={pin.id}
                       onClick={() => handlePinClick(pin)}
-                      className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer whitespace-nowrap rounded px-[0.15cqi] py-[0.02cqi] text-[0.7cqi] font-bold leading-none tracking-tight shadow-sm transition ${
+                      aria-label={pinDisplayName(pin, lang) || formatPrice(pin.price)}
+                      className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer whitespace-nowrap rounded font-bold leading-none tracking-tight shadow-sm transition before:absolute before:-inset-2 before:content-[''] ${
                         isMatch ? "z-10 scale-125 ring-2 ring-orange-500" : ""
                       } ${dim ? "opacity-30" : ""}`}
                       style={{
                         left: `${pin.x}%`,
                         top: `${pin.y}%`,
-                        backgroundColor: "rgba(255, 248, 235, 0.92)",
+                        backgroundColor: "rgba(255, 248, 235, 0.95)",
                         color: "oklch(0.58 0.18 35)",
-                        border: "1px solid oklch(0.58 0.18 35 / 0.35)",
+                        border: "1px solid oklch(0.58 0.18 35 / 0.45)",
+                        padding: "2px 4px",
+                        fontSize: "clamp(9px, 1.1cqi, 13px)",
                       }}
                     >
                       {formatPrice(pin.price)}
