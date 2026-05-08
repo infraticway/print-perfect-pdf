@@ -195,6 +195,8 @@ function Cardapio() {
                   alt={`Cardápio página ${page.num}`}
                   className="absolute inset-0 h-full w-full select-none object-contain"
                   draggable={false}
+                  loading={page.num <= 2 ? "eager" : "lazy"}
+                  decoding="async"
                 />
                 {pagePins.map((pin) => {
                   if (pin.price == null) return null;
