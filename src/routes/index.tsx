@@ -61,6 +61,7 @@ function Cardapio() {
   const [selectedPin, setSelectedPin] = useState<Pin | null>(null);
   const [showQR, setShowQR] = useState(false);
   const [pinScale, setPinScale] = useState<number>(1);
+  const [zoomPage, setZoomPage] = useState<{ src: string; aspect: number; num: number } | null>(null);
 
   useEffect(() => {
     const storedLang = localStorage.getItem("menu_lang") as Lang | null;
