@@ -132,7 +132,7 @@ function Cardapio() {
               <button
                 onClick={decreaseScale}
                 disabled={pinScale <= PIN_SCALE_MIN + 0.001}
-                aria-label="Diminuir preços"
+                aria-label="Diminuir cardápio"
                 className="flex h-7 w-7 items-center justify-center text-stone-500 hover:bg-stone-50 disabled:opacity-30"
               >
                 <Minus className="h-3.5 w-3.5" />
@@ -143,7 +143,7 @@ function Cardapio() {
               <button
                 onClick={increaseScale}
                 disabled={pinScale >= PIN_SCALE_MAX - 0.001}
-                aria-label="Aumentar preços"
+                aria-label="Aumentar cardápio"
                 className="flex h-7 w-7 items-center justify-center text-stone-500 hover:bg-stone-50 disabled:opacity-30"
               >
                 <Plus className="h-3.5 w-3.5" />
