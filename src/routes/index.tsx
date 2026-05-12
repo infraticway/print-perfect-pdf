@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { X, QrCode, Minus, Plus } from "lucide-react";
+import { X, QrCode, Minus, Plus, Maximize2 } from "lucide-react";
 import { PAGES, formatPrice } from "@/lib/menu-data";
 import { usePins, type Pin } from "@/lib/use-pins";
 import { trackEvent } from "@/lib/analytics";
@@ -61,6 +61,7 @@ function Cardapio() {
   const [selectedPin, setSelectedPin] = useState<Pin | null>(null);
   const [showQR, setShowQR] = useState(false);
   const [pinScale, setPinScale] = useState<number>(1);
+  const [zoomPage, setZoomPage] = useState<{ src: string; aspect: number; num: number } | null>(null);
 
   useEffect(() => {
     const storedLang = localStorage.getItem("menu_lang") as Lang | null;
@@ -209,6 +210,13 @@ function Cardapio() {
                   loading={page.num <= 2 ? "eager" : "lazy"}
                   decoding="async"
                 />
+                <button
+                  onClick={() => setZoomPage({ src: page.src, aspect: page.aspect, num: page.num })}
+                  aria-label="Ver em tela cheia"
+                  className="absolute right-2 top-2 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/85 text-stone-700 shadow-md ring-1 ring-stone-200 backdrop-blur transition hover:bg-white hover:text-stone-900"
+                >
+                  <Maximize2 className="h-3.5 w-3.5" />
+                </button>
                 {pagePins.map((pin) => {
                   if (pin.price == null) return null;
                   const isMatch = matchingPinIds?.has(pin.id);
@@ -297,6 +305,62 @@ function Cardapio() {
 
       {/* Modal QR */}
       {showQR && <QRModal onClose={() => setShowQR(false)} />}
+
+      {/* Modal de página em tela cheia */}
+      {zoomPage && <PageZoomModal page={zoomPage} onClose={() => setZoomPage(null)} />}
+    </div>
+  );
+}
+
+function PageZoomModal({
+  page,
+  onClose,
+}: {
+  page: { src: string; aspect: number; num: number };
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
+
+  return (
+    <div className="fixed inset-0 z-[60] flex flex-col bg-stone-950/95">
+      <div className="flex items-center justify-between border-b border-white/10 px-3 py-2 text-white">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/70">
+          Página {page.num} · pinça para dar zoom
+        </span>
+        <button
+          onClick={onClose}
+          aria-label="Fechar"
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+      <div
+        className="flex-1 overflow-auto overscroll-contain bg-stone-950"
+        style={{ touchAction: "pinch-zoom" }}
+      >
+        <img
+          src={page.src}
+          alt={`Cardápio página ${page.num} ampliado`}
+          draggable={false}
+          className="block h-auto w-auto max-w-none select-none"
+          style={{
+            // Tamanho inicial generoso para já facilitar a leitura no celular
+            minWidth: "180vw",
+            minHeight: page.aspect < 1 ? "100vh" : undefined,
+          }}
+        />
+      </div>
     </div>
   );
 }
