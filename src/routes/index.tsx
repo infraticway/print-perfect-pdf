@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { X, QrCode, Minus, Plus } from "lucide-react";
+import { X, QrCode, Minus, Plus, Maximize2 } from "lucide-react";
 import { PAGES, formatPrice } from "@/lib/menu-data";
 import { usePins, type Pin } from "@/lib/use-pins";
 import { trackEvent } from "@/lib/analytics";
