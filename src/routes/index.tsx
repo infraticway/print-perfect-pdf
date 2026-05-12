@@ -132,7 +132,7 @@ function Cardapio() {
               <button
                 onClick={decreaseScale}
                 disabled={pinScale <= PIN_SCALE_MIN + 0.001}
-                aria-label="Diminuir preços"
+                aria-label="Diminuir cardápio"
                 className="flex h-7 w-7 items-center justify-center text-stone-500 hover:bg-stone-50 disabled:opacity-30"
               >
                 <Minus className="h-3.5 w-3.5" />
@@ -143,7 +143,7 @@ function Cardapio() {
               <button
                 onClick={increaseScale}
                 disabled={pinScale >= PIN_SCALE_MAX - 0.001}
-                aria-label="Aumentar preços"
+                aria-label="Aumentar cardápio"
                 className="flex h-7 w-7 items-center justify-center text-stone-500 hover:bg-stone-50 disabled:opacity-30"
               >
                 <Plus className="h-3.5 w-3.5" />
@@ -187,7 +187,10 @@ function Cardapio() {
         </nav>
       </header>
 
-      <main className="mx-auto max-w-5xl space-y-3 p-2 sm:space-y-4 sm:p-4">
+      <main
+        className="mx-auto space-y-3 p-2 transition-[max-width] duration-200 sm:space-y-4 sm:p-4"
+        style={{ maxWidth: `${64 * pinScale}rem` }}
+      >
         {loading && <p className="text-center text-sm text-stone-500">Carregando...</p>}
 
         {PAGES.map((page) => {
@@ -235,8 +238,8 @@ function Cardapio() {
                         backgroundColor: "#fffaf0",
                         color: BRAND_DEEP,
                         border: `1px solid ${BRAND}`,
-                        padding: `${1 * pinScale}px ${3 * pinScale}px`,
-                        fontSize: `clamp(${6 * pinScale}px, ${0.85 * pinScale}cqi, ${11 * pinScale}px)`,
+                        padding: "1px 3px",
+                        fontSize: "clamp(6px, 0.85cqi, 11px)",
                         boxShadow: "0 1px 2px rgba(80, 30, 0, 0.15)",
                         ...(isMatch ? { ["--tw-ring-color" as string]: BRAND } : {}),
                       }}
