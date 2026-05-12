@@ -144,20 +144,17 @@ function Cardapio() {
                       role="button"
                       tabIndex={0}
                       aria-label={pinDisplayName(pin, lang) || formatPrice(pin.price)}
-                      className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer whitespace-nowrap rounded-[4px] font-semibold leading-none tabular-nums tracking-tight transition-transform duration-150 active:scale-95"
+                      className="absolute -translate-x-1/2 -translate-y-1/2 block cursor-pointer rounded-full transition-transform duration-150 active:scale-95"
                       style={{
                         left: `${pin.x}%`,
                         top: `${pin.y}%`,
-                        backgroundColor: "#fffaf0",
-                        color: BRAND_DEEP,
-                        border: `1px solid ${BRAND}`,
-                        padding: "1px 3px",
-                        fontSize: "clamp(8px, 2cqi, 13px)",
-                        boxShadow: "0 1px 2px rgba(80, 30, 0, 0.15)",
+                        width: "clamp(8px, 1.6cqi, 14px)",
+                        height: "clamp(8px, 1.6cqi, 14px)",
+                        backgroundColor: BRAND,
+                        border: "1.5px solid #fffaf0",
+                        boxShadow: "0 1px 3px rgba(80, 30, 0, 0.4)",
                       }}
-                    >
-                      {formatPrice(pin.price)}
-                    </span>
+                    />
                   );
                 })}
               </button>
