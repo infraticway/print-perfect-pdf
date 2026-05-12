@@ -305,6 +305,62 @@ function Cardapio() {
 
       {/* Modal QR */}
       {showQR && <QRModal onClose={() => setShowQR(false)} />}
+
+      {/* Modal de página em tela cheia */}
+      {zoomPage && <PageZoomModal page={zoomPage} onClose={() => setZoomPage(null)} />}
+    </div>
+  );
+}
+
+function PageZoomModal({
+  page,
+  onClose,
+}: {
+  page: { src: string; aspect: number; num: number };
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
+
+  return (
+    <div className="fixed inset-0 z-[60] flex flex-col bg-stone-950/95">
+      <div className="flex items-center justify-between border-b border-white/10 px-3 py-2 text-white">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/70">
+          Página {page.num} · pinça para dar zoom
+        </span>
+        <button
+          onClick={onClose}
+          aria-label="Fechar"
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+      <div
+        className="flex-1 overflow-auto overscroll-contain bg-stone-950"
+        style={{ touchAction: "pinch-zoom" }}
+      >
+        <img
+          src={page.src}
+          alt={`Cardápio página ${page.num} ampliado`}
+          draggable={false}
+          className="block h-auto w-auto max-w-none select-none"
+          style={{
+            // Tamanho inicial generoso para já facilitar a leitura no celular
+            minWidth: "180vw",
+            minHeight: page.aspect < 1 ? "100vh" : undefined,
+          }}
+        />
+      </div>
     </div>
   );
 }
