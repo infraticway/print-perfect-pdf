@@ -188,8 +188,11 @@ function Cardapio() {
       </header>
 
       <main
-        className="mx-auto space-y-3 p-2 transition-[max-width] duration-200 sm:space-y-4 sm:p-4"
-        style={{ maxWidth: `${64 * pinScale}rem` }}
+        className="mx-auto space-y-3 p-2 transition-[width] duration-200 sm:space-y-4 sm:p-4"
+        style={{
+          width: `min(${64 * pinScale}rem, calc(100vw * ${pinScale}))`,
+          maxWidth: "none",
+        }}
       >
         {loading && <p className="text-center text-sm text-stone-500">Carregando...</p>}
 
