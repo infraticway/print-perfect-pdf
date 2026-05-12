@@ -238,8 +238,8 @@ function Cardapio() {
                         backgroundColor: "#fffaf0",
                         color: BRAND_DEEP,
                         border: `1px solid ${BRAND}`,
-                        padding: `${1 * pinScale}px ${3 * pinScale}px`,
-                        fontSize: `clamp(${6 * pinScale}px, ${0.85 * pinScale}cqi, ${11 * pinScale}px)`,
+                        padding: "1px 3px",
+                        fontSize: "clamp(6px, 0.85cqi, 11px)",
                         boxShadow: "0 1px 2px rgba(80, 30, 0, 0.15)",
                         ...(isMatch ? { ["--tw-ring-color" as string]: BRAND } : {}),
                       }}
