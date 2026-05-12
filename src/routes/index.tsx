@@ -345,5 +345,3 @@ function QRModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-// Unused import suppressor (keeps Maximize2 available for backwards compat if needed)
-void Maximize2;
