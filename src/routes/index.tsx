@@ -210,6 +210,13 @@ function Cardapio() {
                   loading={page.num <= 2 ? "eager" : "lazy"}
                   decoding="async"
                 />
+                <button
+                  onClick={() => setZoomPage({ src: page.src, aspect: page.aspect, num: page.num })}
+                  aria-label="Ver em tela cheia"
+                  className="absolute right-2 top-2 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/85 text-stone-700 shadow-md ring-1 ring-stone-200 backdrop-blur transition hover:bg-white hover:text-stone-900"
+                >
+                  <Maximize2 className="h-3.5 w-3.5" />
+                </button>
                 {pagePins.map((pin) => {
                   if (pin.price == null) return null;
                   const isMatch = matchingPinIds?.has(pin.id);
