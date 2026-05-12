@@ -152,7 +152,7 @@ function Cardapio() {
                         color: BRAND_DEEP,
                         border: `1px solid ${BRAND}`,
                         padding: "1px 3px",
-                        fontSize: "clamp(7px, 1.1cqi, 12px)",
+                        fontSize: "clamp(8px, 2cqi, 13px)",
                         boxShadow: "0 1px 2px rgba(80, 30, 0, 0.15)",
                       }}
                     >
@@ -266,12 +266,13 @@ function PageZoomModal({
       </div>
       <div
         className="flex-1 overflow-auto overscroll-contain bg-stone-950"
-        style={{ touchAction: "pinch-zoom" }}
+        style={{ touchAction: "pan-x pan-y pinch-zoom", WebkitOverflowScrolling: "touch" }}
       >
         <div
-          className="relative"
+          className="relative mx-auto"
           style={{
-            width: "200vw",
+            width: "220vw",
+            maxWidth: "none",
             aspectRatio: `${page.aspect}`,
             containerType: "inline-size",
           }}
