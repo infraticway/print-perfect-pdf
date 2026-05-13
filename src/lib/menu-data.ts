@@ -12,32 +12,33 @@ export type MenuItem = {
 };
 
 export const ITEMS: MenuItem[] = [
-  // ====== PÁGINA 2 — Bebidas Quentes (coluna esquerda, x=22%) ======
-  { id: "espresso-havanna", label: "Espresso Havanna - Blend Exclusivo (50ml)", section: "Bebidas Quentes", page: 2, x: 22, y: 19.5 },
-  { id: "espresso-doppio", label: "Espresso Doppio (130ml)", section: "Bebidas Quentes", page: 2, x: 22, y: 28.8 },
-  { id: "espresso-macchiato", label: "Espresso Macchiato", section: "Bebidas Quentes", page: 2, x: 22, y: 33.0 },
-  { id: "espresso-dulce", label: "Espresso com Dulce de Leche (50ml)", section: "Bebidas Quentes", page: 2, x: 22, y: 38.5 },
-  { id: "cafe-latte", label: "Café Latte (130ml)", section: "Bebidas Quentes", page: 2, x: 22, y: 45.5 },
-  { id: "cappuccino-italiano", label: "Cappuccino Italiano (130ml)", section: "Bebidas Quentes", page: 2, x: 22, y: 51.5 },
-  { id: "cappuccino-vienense", label: "Cappuccino Vienense (240ml)", section: "Bebidas Quentes", page: 2, x: 22, y: 57.5 },
-  { id: "cappuccino-havanna", label: "Cappuccino Havanna (130ml)", section: "Bebidas Quentes", page: 2, x: 22, y: 63.0 },
+  // ====== PÁGINA 2 — Bebidas Quentes (coluna esquerda, x=24.3%) ======
+  { id: "espresso-havanna", label: "Espresso Havanna - Blend Exclusivo (50ml)", section: "Bebidas Quentes", page: 2, x: 24.3, y: 18.4 },
+  { id: "espresso-doppio", label: "Espresso Doppio (130ml)", section: "Bebidas Quentes", page: 2, x: 24.3, y: 27.4 },
+  { id: "espresso-macchiato", label: "Espresso Macchiato (50ml)", section: "Bebidas Quentes", page: 2, x: 24.3, y: 31.5 },
+  { id: "espresso-macchiato-130", label: "Espresso Macchiato (130ml)", section: "Bebidas Quentes", page: 2, x: 33.0, y: 31.5 },
+  { id: "espresso-dulce", label: "Espresso com Dulce de Leche (50ml)", section: "Bebidas Quentes", page: 2, x: 24.3, y: 36.7 },
+  { id: "cafe-latte", label: "Café Latte (130ml)", section: "Bebidas Quentes", page: 2, x: 24.3, y: 43.7 },
+  { id: "cappuccino-italiano", label: "Cappuccino Italiano (130ml)", section: "Bebidas Quentes", page: 2, x: 24.3, y: 49.3 },
+  { id: "cappuccino-vienense", label: "Cappuccino Vienense (240ml)", section: "Bebidas Quentes", page: 2, x: 24.3, y: 55.1 },
+  { id: "cappuccino-havanna", label: "Cappuccino Havanna (130ml)", section: "Bebidas Quentes", page: 2, x: 24.3, y: 60.8 },
 
-  // ====== PÁGINA 2 — Bebidas Quentes (coluna direita, x=92%) ======
-  { id: "3coracoes-cappuccino", label: "3 Corações Cappuccino (160ml)", section: "Bebidas Quentes", page: 2, x: 92, y: 27.0 },
-  { id: "mocha-dulce", label: "Mocha com Dulce de Leche (240ml)", section: "Bebidas Quentes", page: 2, x: 92, y: 33.5 },
-  { id: "dulce-quente", label: "Dulce de Leche Quente (240ml)", section: "Bebidas Quentes", page: 2, x: 92, y: 39.5 },
-  { id: "chocolate-quente", label: "Chocolate Quente (150ml)", section: "Bebidas Quentes", page: 2, x: 92, y: 46.0 },
-  { id: "choco-havanna", label: "Choco Havanna (130ml)", section: "Bebidas Quentes", page: 2, x: 92, y: 51.8 },
-  { id: "cha-importado", label: "Chá Importado (150ml)", section: "Bebidas Quentes", page: 2, x: 92, y: 57.5 },
+  // ====== PÁGINA 2 — Bebidas Quentes (coluna direita, x=93.2%) ======
+  { id: "3coracoes-cappuccino", label: "3 Corações Cappuccino (160ml)", section: "Bebidas Quentes", page: 2, x: 93.2, y: 25.6 },
+  { id: "mocha-dulce", label: "Mocha com Dulce de Leche (240ml)", section: "Bebidas Quentes", page: 2, x: 93.2, y: 31.1 },
+  { id: "dulce-quente", label: "Dulce de Leche Quente (240ml)", section: "Bebidas Quentes", page: 2, x: 93.2, y: 37.0 },
+  { id: "chocolate-quente", label: "Chocolate Quente (150ml)", section: "Bebidas Quentes", page: 2, x: 93.2, y: 42.8 },
+  { id: "choco-havanna", label: "Choco Havanna (130ml)", section: "Bebidas Quentes", page: 2, x: 93.2, y: 48.3 },
+  { id: "cha-importado", label: "Chá Importado (150ml)", section: "Bebidas Quentes", page: 2, x: 93.2, y: 54.0 },
 
-  // ====== PÁGINA 2 — Extras (caixa inferior esquerda, lado a lado) ======
-  { id: "extra-chantilly", label: "Extra: Chantilly (35g)", section: "Extras", page: 2, x: 11, y: 90 },
-  { id: "extra-dulce", label: "Extra: Dulce de Leche (50g)", section: "Extras", page: 2, x: 17, y: 90 },
-  { id: "extra-leite-vegetal", label: "Extra: Leite Vegetal A Tal da Castanha (50ml)", section: "Extras", page: 2, x: 23, y: 90 },
+  // ====== PÁGINA 2 — Extras (caixa inferior esquerda) ======
+  { id: "extra-chantilly", label: "Extra: Chantilly (35g)", section: "Extras", page: 2, x: 8.3, y: 86.1 },
+  { id: "extra-dulce", label: "Extra: Dulce de Leche (50g)", section: "Extras", page: 2, x: 15.0, y: 86.1 },
+  { id: "extra-leite-vegetal", label: "Extra: Leite Vegetal A Tal da Castanha (50ml)", section: "Extras", page: 2, x: 22.4, y: 86.1 },
 
   // ====== PÁGINA 2 — Para Levar (coluna direita inferior) ======
-  { id: "cafe-3coracoes-moido", label: "Café 3 Corações Havanna Torrado e Moído (250g)", section: "Para Levar", page: 2, x: 92, y: 79.5 },
-  { id: "capsulas-cappuccino", label: "Cappuccino Doce de Leite Havanna 3 Corações (10 cápsulas)", section: "Para Levar", page: 2, x: 92, y: 91.5 },
+  { id: "cafe-3coracoes-moido", label: "Café 3 Corações Havanna Torrado e Moído (250g)", section: "Para Levar", page: 2, x: 93.2, y: 73.2 },
+  { id: "capsulas-cappuccino", label: "Cappuccino Doce de Leite Havanna 3 Corações (10 cápsulas)", section: "Para Levar", page: 2, x: 93.2, y: 85.5 },
 
   // ====== PÁGINA 3 — Bebidas Geladas (coluna esquerda, x=18%) ======
   { id: "agua-sem-gas", label: "Água Sem Gás", section: "Bebidas Geladas", page: 3, x: 18, y: 21.5 },
