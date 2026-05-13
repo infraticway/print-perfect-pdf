@@ -40,14 +40,6 @@ function Cardapio() {
   const [selectedPin, setSelectedPin] = useState<Pin | null>(null);
   const [showQR, setShowQR] = useState(false);
   const [zoomPage, setZoomPage] = useState<{ src: string; aspect: number; num: number } | null>(null);
-  const [openPages, setOpenPages] = useState<Record<number, boolean>>(() => {
-    // Por padrão, abre as páginas com itens
-    const initial: Record<number, boolean> = {};
-    PAGES.forEach((p) => {
-      if (p.num >= 2 && p.num <= 6) initial[p.num] = true;
-    });
-    return initial;
-  });
 
   useEffect(() => {
     trackEvent("view", { language: lang });
@@ -56,10 +48,6 @@ function Cardapio() {
   const handlePinClick = (pin: Pin) => {
     setSelectedPin(pin);
     trackEvent("pin_click", { pin_id: pin.id, page: pin.page, language: lang });
-  };
-
-  const togglePage = (num: number) => {
-    setOpenPages((prev) => ({ ...prev, [num]: !prev[num] }));
   };
 
   return (
