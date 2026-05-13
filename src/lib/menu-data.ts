@@ -143,7 +143,10 @@ export const ITEMS: MenuItem[] = [
   { id: "creme-pistache", label: "Creme de Pistache Dubai — Pote 170g", section: "Dulce de Leche", page: 6, x: 70.46, y: 66.7 },
 
   // ====== PÁGINA 6 — Caixas de Alfajores & Chocolates (lado direito do spread) ======
-  { id: "caixa-4-alfajores", label: "Caixa com 4 Alfajores (70%/Mar del Plata/Sem Açúcar/Pistache)", section: "Caixas", page: 6, x: 91.29, y: 12.74 },
+  { id: "caixa-4-alfajores", label: "Caixa com 4 Alfajores — 70% Cacao", section: "Caixas", page: 6, x: 91.29, y: 12.74 },
+  { id: "caixa-4-mar-del-plata", label: "Caixa com 4 Alfajores — Mar del Plata", section: "Caixas", page: 6, x: 91.29, y: 14.17 },
+  { id: "caixa-4-sem-acucar", label: "Caixa com 4 Alfajores — Sem açúcar", section: "Caixas", page: 6, x: 91.29, y: 15.88 },
+  { id: "caixa-4-pistache", label: "Caixa com 4 Alfajores — Pistache", section: "Caixas", page: 6, x: 91.29, y: 17.47 },
   { id: "caixa-6-leite", label: "Caixa com 6 Alfajores — Chocolate ao Leite", section: "Caixas", page: 6, x: 90.73, y: 20.67 },
   { id: "caixa-6-merengue", label: "Caixa com 6 Alfajores — Merengue", section: "Caixas", page: 6, x: 90.73, y: 20.67 },
   { id: "caixa-6-misto", label: "Caixa com 6 Alfajores — Misto", section: "Caixas", page: 6, x: 90.73, y: 20.67 },
