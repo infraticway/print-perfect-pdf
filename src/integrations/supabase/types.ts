@@ -52,6 +52,24 @@ export type Database = {
           },
         ]
       }
+      menu_item_prices: {
+        Row: {
+          item_id: string
+          price: number | null
+          updated_at: string
+        }
+        Insert: {
+          item_id: string
+          price?: number | null
+          updated_at?: string
+        }
+        Update: {
+          item_id?: string
+          price?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       menu_pins: {
         Row: {
           created_at: string
