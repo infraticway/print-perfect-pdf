@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { X, QrCode, Expand } from "lucide-react";
+import { X, QrCode } from "lucide-react";
 import { PAGES, ITEMS, formatPrice, type MenuItem } from "@/lib/menu-data";
 import { useItemPrices } from "@/lib/use-item-prices";
 import { trackEvent } from "@/lib/analytics";
@@ -27,7 +27,7 @@ function Cardapio() {
   const { prices, loading } = useItemPrices();
   const [showQR, setShowQR] = useState(false);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
-  const [zoomPage, setZoomPage] = useState<{ src: string; aspect: number; num: number } | null>(null);
+  
 
   useEffect(() => {
     trackEvent("view", { language: "pt" });
@@ -120,12 +120,9 @@ function Cardapio() {
 
         {PAGES.map((page) => (
           <section key={page.num} id={`page-${page.num}`} className="w-full scroll-mt-32">
-            <button
-              type="button"
-              onClick={() => setZoomPage({ src: page.src, aspect: page.aspect, num: page.num })}
-              className="group relative block w-full overflow-hidden rounded-xl bg-white text-left shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_16px_-8px_rgba(0,0,0,0.08)] ring-1 ring-stone-200/60"
+            <div
+              className="relative block w-full overflow-hidden rounded-xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_16px_-8px_rgba(0,0,0,0.08)] ring-1 ring-stone-200/60"
               style={{ aspectRatio: `${page.aspect}`, containerType: "inline-size" }}
-              aria-label={`Ampliar página ${page.num}`}
             >
               <img
                 src={page.src}
@@ -135,14 +132,8 @@ function Cardapio() {
                 loading={page.num <= 2 ? "eager" : "lazy"}
                 decoding="async"
               />
-
-              <div className="pointer-events-none absolute right-2 top-2 z-20 flex items-center gap-1.5 rounded-full bg-stone-900/85 px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-white shadow-lg backdrop-blur">
-                <Expand className="h-3 w-3" />
-                <span>Ampliar</span>
-              </div>
-
               {renderPrices(page.num)}
-            </button>
+            </div>
           </section>
         ))}
       </main>
@@ -186,103 +177,6 @@ function Cardapio() {
       )}
 
       {showQR && <QRModal onClose={() => setShowQR(false)} />}
-
-      {zoomPage && (
-        <PageZoomModal
-          page={zoomPage}
-          prices={prices}
-          onClose={() => setZoomPage(null)}
-          onItemClick={handleItemClick}
-        />
-      )}
-    </div>
-  );
-}
-
-function PageZoomModal({
-  page,
-  prices,
-  onClose,
-  onItemClick,
-}: {
-  page: { src: string; aspect: number; num: number };
-  prices: Record<string, number | null>;
-  onClose: () => void;
-  onItemClick: (item: MenuItem) => void;
-}) {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [onClose]);
-
-  const items = ITEMS.filter((it) => it.page === page.num);
-
-  return (
-    <div className="fixed inset-0 z-[60] flex flex-col bg-stone-950/95">
-      <div className="flex items-center justify-between border-b border-white/10 px-3 py-2 text-white">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/70">
-          Página {page.num} · arraste para mover
-        </span>
-        <button
-          onClick={onClose}
-          aria-label="Fechar"
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white active:bg-white/20"
-        >
-          <X className="h-4 w-4" />
-        </button>
-      </div>
-      <div
-        className="flex-1 overflow-auto overscroll-contain bg-stone-950"
-        style={{ touchAction: "pan-x pan-y pinch-zoom", WebkitOverflowScrolling: "touch" }}
-      >
-        <div
-          className="relative mx-auto"
-          style={{
-            width: "220vw",
-            maxWidth: "none",
-            aspectRatio: `${page.aspect}`,
-            containerType: "inline-size",
-          }}
-        >
-          <img
-            src={page.src}
-            alt={`Cardápio página ${page.num} ampliado`}
-            draggable={false}
-            className="absolute inset-0 block h-full w-full select-none object-contain"
-          />
-          {items.map((it) => {
-            const price = prices[it.id];
-            if (price == null) return null;
-            return (
-              <button
-                key={it.id}
-                onClick={() => onItemClick(it)}
-                aria-label={`${it.label}: ${formatPrice(price)}`}
-                className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer whitespace-nowrap rounded-[6px] font-semibold leading-none tabular-nums tracking-tight active:scale-95"
-                style={{
-                  left: `${it.x}%`,
-                  top: `${it.y}%`,
-                  backgroundColor: "#fffaf0",
-                  color: BRAND_DEEP,
-                  border: `1.5px solid ${BRAND}`,
-                  padding: "3px 6px",
-                  fontSize: "clamp(10px, 1.1cqi, 16px)",
-                  boxShadow: "0 2px 6px rgba(80, 30, 0, 0.25)",
-                }}
-              >
-                {formatPrice(price)}
-              </button>
-            );
-          })}
-        </div>
-      </div>
     </div>
   );
 }
