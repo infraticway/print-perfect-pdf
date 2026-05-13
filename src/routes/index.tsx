@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { X, QrCode, Expand } from "lucide-react";
+import { X, QrCode, Expand, ChevronDown } from "lucide-react";
 import { PAGES, formatPrice } from "@/lib/menu-data";
 import { usePins, type Pin } from "@/lib/use-pins";
 import { trackEvent } from "@/lib/analytics";
@@ -36,19 +36,18 @@ function pinDisplayDesc(pin: Pin, lang: Lang): string | null {
 
 function Cardapio() {
   const { pins, loading } = usePins();
-  const [lang, setLang] = useState<Lang>("pt");
+  const [lang] = useState<Lang>("pt");
   const [selectedPin, setSelectedPin] = useState<Pin | null>(null);
   const [showQR, setShowQR] = useState(false);
   const [zoomPage, setZoomPage] = useState<{ src: string; aspect: number; num: number } | null>(null);
-
-  useEffect(() => {
-    const storedLang = localStorage.getItem("menu_lang") as Lang | null;
-    if (storedLang) setLang(storedLang);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") localStorage.setItem("menu_lang", lang);
-  }, [lang]);
+  const [openPages, setOpenPages] = useState<Record<number, boolean>>(() => {
+    // Por padrão, abre as páginas com itens
+    const initial: Record<number, boolean> = {};
+    PAGES.forEach((p) => {
+      if (p.num >= 2 && p.num <= 6) initial[p.num] = true;
+    });
+    return initial;
+  });
 
   useEffect(() => {
     trackEvent("view", { language: lang });
@@ -57,6 +56,10 @@ function Cardapio() {
   const handlePinClick = (pin: Pin) => {
     setSelectedPin(pin);
     trackEvent("pin_click", { pin_id: pin.id, page: pin.page, language: lang });
+  };
+
+  const togglePage = (num: number) => {
+    setOpenPages((prev) => ({ ...prev, [num]: !prev[num] }));
   };
 
   return (
@@ -90,9 +93,12 @@ function Cardapio() {
             <button
               key={p.num}
               onClick={() => {
-                document
-                  .getElementById(`page-${p.num}`)
-                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
+                setOpenPages((prev) => ({ ...prev, [p.num]: true }));
+                setTimeout(() => {
+                  document
+                    .getElementById(`page-${p.num}`)
+                    ?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }, 50);
               }}
               className="shrink-0 rounded-full border border-stone-200 bg-white px-3 py-1 text-[11px] font-medium tracking-wide text-stone-600 active:bg-stone-100"
             >
@@ -106,58 +112,84 @@ function Cardapio() {
         {loading && <p className="text-center text-sm text-stone-500">Carregando...</p>}
 
         {PAGES.map((page) => {
-          const pagePins = pins.filter((p) => p.page === page.num);
+          const pagePins = pins
+            .filter((p) => p.page === page.num && p.price != null)
+            .sort((a, b) => a.y - b.y || a.x - b.x);
+          const isOpen = openPages[page.num] ?? false;
+
           return (
             <section key={page.num} id={`page-${page.num}`} className="w-full scroll-mt-32">
-              <button
-                type="button"
-                onClick={() => setZoomPage({ src: page.src, aspect: page.aspect, num: page.num })}
-                className="group relative block w-full overflow-hidden rounded-xl bg-white text-left shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_16px_-8px_rgba(0,0,0,0.08)] ring-1 ring-stone-200/60"
-                style={{ aspectRatio: `${page.aspect}`, containerType: "inline-size" }}
-                aria-label={`Ampliar página ${page.num}`}
-              >
-                <img
-                  src={page.src}
-                  alt={`Cardápio página ${page.num}`}
-                  className="absolute inset-0 h-full w-full select-none object-contain"
-                  draggable={false}
-                  loading={page.num <= 2 ? "eager" : "lazy"}
-                  decoding="async"
-                />
+              <div className="overflow-hidden rounded-xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_16px_-8px_rgba(0,0,0,0.08)] ring-1 ring-stone-200/60">
+                {/* Imagem da página */}
+                <button
+                  type="button"
+                  onClick={() => setZoomPage({ src: page.src, aspect: page.aspect, num: page.num })}
+                  className="group relative block w-full overflow-hidden bg-white text-left"
+                  style={{ aspectRatio: `${page.aspect}` }}
+                  aria-label={`Ampliar página ${page.num}`}
+                >
+                  <img
+                    src={page.src}
+                    alt={`Cardápio página ${page.num}`}
+                    className="absolute inset-0 h-full w-full select-none object-contain"
+                    draggable={false}
+                    loading={page.num <= 2 ? "eager" : "lazy"}
+                    decoding="async"
+                  />
+                  <div className="pointer-events-none absolute right-2 top-2 z-20 flex items-center gap-1.5 rounded-full bg-stone-900/85 px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-white shadow-lg backdrop-blur">
+                    <Expand className="h-3 w-3" />
+                    <span>Ampliar</span>
+                  </div>
+                </button>
 
-                {/* Hint flutuante de "Toque para ampliar" */}
-                <div className="pointer-events-none absolute right-2 top-2 z-20 flex items-center gap-1.5 rounded-full bg-stone-900/85 px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-white shadow-lg backdrop-blur">
-                  <Expand className="h-3 w-3" />
-                  <span>Ampliar</span>
-                </div>
+                {/* Lista de preços */}
+                {pagePins.length > 0 && (
+                  <div className="border-t border-stone-100">
+                    <button
+                      type="button"
+                      onClick={() => togglePage(page.num)}
+                      className="flex w-full items-center justify-between gap-2 px-4 py-3 text-left active:bg-stone-50"
+                      aria-expanded={isOpen}
+                    >
+                      <div className="min-w-0">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: BRAND }}>
+                          {SECTION_LABEL_FALLBACK[page.num] ?? `Página ${page.num}`}
+                        </p>
+                        <p className="text-xs text-stone-500">
+                          {pagePins.length} {pagePins.length === 1 ? "item" : "itens"} · toque para {isOpen ? "ocultar" : "ver"} preços
+                        </p>
+                      </div>
+                      <ChevronDown
+                        className={`h-4 w-4 shrink-0 text-stone-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
+                      />
+                    </button>
 
-                {pagePins.map((pin) => {
-                  if (pin.price == null) return null;
-                  return (
-                    <span
-                      key={pin.id}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        handlePinClick(pin);
-                      }}
-                      role="button"
-                      tabIndex={0}
-                      aria-label={pinDisplayName(pin, lang) || formatPrice(pin.price)}
-                      className="absolute -translate-x-1/2 -translate-y-1/2 block cursor-pointer rounded-full transition-transform duration-150 active:scale-95"
-                      style={{
-                        left: `${pin.x}%`,
-                        top: `${pin.y}%`,
-                        width: "clamp(8px, 1.6cqi, 14px)",
-                        height: "clamp(8px, 1.6cqi, 14px)",
-                        backgroundColor: BRAND,
-                        border: "1.5px solid #fffaf0",
-                        boxShadow: "0 1px 3px rgba(80, 30, 0, 0.4)",
-                      }}
-                    />
-                  );
-                })}
-              </button>
+                    {isOpen && (
+                      <ul className="divide-y divide-stone-100 border-t border-stone-100">
+                        {pagePins.map((pin) => (
+                          <li key={pin.id}>
+                            <button
+                              type="button"
+                              onClick={() => handlePinClick(pin)}
+                              className="flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left active:bg-stone-50"
+                            >
+                              <span className="min-w-0 flex-1 truncate text-sm text-stone-700">
+                                {pinDisplayName(pin, lang) || "Item"}
+                              </span>
+                              <span
+                                className="shrink-0 text-sm font-bold tabular-nums"
+                                style={{ color: BRAND }}
+                              >
+                                {formatPrice(pin.price)}
+                              </span>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                )}
+              </div>
             </section>
           );
         })}
@@ -251,7 +283,7 @@ function PageZoomModal({
     <div className="fixed inset-0 z-[60] flex flex-col bg-stone-950/95">
       <div className="flex items-center justify-between border-b border-white/10 px-3 py-2 text-white">
         <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/70">
-          Página {page.num} · pinça para zoom
+          Página {page.num} · arraste para mover
         </span>
         <button
           onClick={onClose}
@@ -342,4 +374,3 @@ function QRModal({ onClose }: { onClose: () => void }) {
     </div>
   );
 }
-
