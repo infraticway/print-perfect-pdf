@@ -142,14 +142,14 @@ export const ITEMS: MenuItem[] = [
   { id: "caramelo-salgado", label: "Caramelo Salgado Mar Del Plata — Pote 420g", section: "Dulce de Leche", page: 6, x: 70.46, y: 59.15 },
   { id: "creme-pistache", label: "Creme de Pistache Dubai — Pote 170g", section: "Dulce de Leche", page: 6, x: 70.46, y: 66.7 },
 
-  // ====== PÁGINA 6 — Caixas de Alfajores & Chocolates (coluna direita, x=93%) ======
-  { id: "caixa-4-alfajores", label: "Caixa com 4 Alfajores (70%/Mar del Plata/Sem Açúcar/Pistache)", section: "Caixas", page: 6, x: 91.13, y: 12.97 },
-  { id: "caixa-6-leite", label: "Caixa com 6 Alfajores — Chocolate ao Leite", section: "Caixas", page: 6, x: 90.81, y: 15.91 },
-  { id: "caixa-6-merengue", label: "Caixa com 6 Alfajores — Merengue", section: "Caixas", page: 6, x: 91.13, y: 17.82 },
-  { id: "caixa-6-misto", label: "Caixa com 6 Alfajores — Misto", section: "Caixas", page: 6, x: 90.85, y: 20.47 },
-  { id: "caixa-12-leite", label: "Caixa com 12 Alfajores — Chocolate ao Leite", section: "Caixas", page: 6, x: 90.89, y: 28.28 },
-  { id: "caixa-12-misto", label: "Caixa com 12 Alfajores — Misto", section: "Caixas", page: 6, x: 91.13, y: 40.22 },
-  { id: "havannitas", label: "Havannitas (9g)", section: "Chocolates", page: 6, x: 93, y: 64.5 },
+  // ====== PÁGINA 6 — Caixas de Alfajores & Chocolates (lado direito do spread) ======
+  { id: "caixa-4-alfajores", label: "Caixa com 4 Alfajores (70%/Mar del Plata/Sem Açúcar/Pistache)", section: "Caixas", page: 6, x: 91.29, y: 12.74 },
+  { id: "caixa-6-leite", label: "Caixa com 6 Alfajores — Chocolate ao Leite", section: "Caixas", page: 6, x: 90.73, y: 20.67 },
+  { id: "caixa-6-merengue", label: "Caixa com 6 Alfajores — Merengue", section: "Caixas", page: 6, x: 90.73, y: 20.67 },
+  { id: "caixa-6-misto", label: "Caixa com 6 Alfajores — Misto", section: "Caixas", page: 6, x: 90.73, y: 20.67 },
+  { id: "caixa-12-leite", label: "Caixa com 12 Alfajores — Chocolate ao Leite", section: "Caixas", page: 6, x: 90.73, y: 28.39 },
+  { id: "caixa-12-misto", label: "Caixa com 12 Alfajores — Misto", section: "Caixas", page: 6, x: 90.73, y: 28.39 },
+  { id: "havannitas", label: "Havannitas (9g)", section: "Chocolates", page: 6, x: 91.25, y: 40.02 },
 ];
 
 // Páginas 1 e 7 são páginas únicas (capa/contracapa) com proporção retrato.
