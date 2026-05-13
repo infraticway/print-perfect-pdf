@@ -57,10 +57,12 @@ function Cardapio() {
           style={{
             left: `${it.x}%`,
             top: `${it.y}%`,
-            color: BRAND_DEEP,
-            fontSize: "clamp(8px, 1.5cqi, 14px)",
-            textShadow:
-              "0 0 2px #fffaf0, 0 0 2px #fffaf0, 0 0 3px #fffaf0, 0 1px 2px rgba(255,250,240,0.9)",
+            color: BRAND,
+            background: "#1a0f08",
+            padding: "0.35em 0.5em",
+            borderRadius: "2px",
+            fontSize: "clamp(8px, 1.6cqi, 15px)",
+            boxShadow: "0 0 0 2px #1a0f08",
           }}
         >
           {formatPrice(price)}
