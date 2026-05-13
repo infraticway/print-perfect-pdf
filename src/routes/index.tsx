@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { X, QrCode, Expand } from "lucide-react";
+import { X, QrCode } from "lucide-react";
 import { PAGES, ITEMS, formatPrice, type MenuItem } from "@/lib/menu-data";
 import { useItemPrices } from "@/lib/use-item-prices";
 import { trackEvent } from "@/lib/analytics";
@@ -120,12 +120,9 @@ function Cardapio() {
 
         {PAGES.map((page) => (
           <section key={page.num} id={`page-${page.num}`} className="w-full scroll-mt-32">
-            <button
-              type="button"
-              onClick={() => setZoomPage({ src: page.src, aspect: page.aspect, num: page.num })}
-              className="group relative block w-full overflow-hidden rounded-xl bg-white text-left shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_16px_-8px_rgba(0,0,0,0.08)] ring-1 ring-stone-200/60"
+            <div
+              className="relative block w-full overflow-hidden rounded-xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_16px_-8px_rgba(0,0,0,0.08)] ring-1 ring-stone-200/60"
               style={{ aspectRatio: `${page.aspect}`, containerType: "inline-size" }}
-              aria-label={`Ampliar página ${page.num}`}
             >
               <img
                 src={page.src}
@@ -135,14 +132,8 @@ function Cardapio() {
                 loading={page.num <= 2 ? "eager" : "lazy"}
                 decoding="async"
               />
-
-              <div className="pointer-events-none absolute right-2 top-2 z-20 flex items-center gap-1.5 rounded-full bg-stone-900/85 px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-white shadow-lg backdrop-blur">
-                <Expand className="h-3 w-3" />
-                <span>Ampliar</span>
-              </div>
-
               {renderPrices(page.num)}
-            </button>
+            </div>
           </section>
         ))}
       </main>
