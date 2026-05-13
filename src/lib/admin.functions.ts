@@ -58,3 +58,11 @@ export const adminAIDetect = ({
 export const adminTranslate = ({ data }: { data: { password: string; target: "en" | "es" } }) => {
   return callAdminPins<{ translated: number }>({ action: "translate", ...data });
 };
+
+export const adminSetPrice = ({
+  data,
+}: {
+  data: { password: string; item_id: string; price: number | null };
+}) => {
+  return callAdminPins<{ ok: true }>({ action: "set_price", ...data });
+};

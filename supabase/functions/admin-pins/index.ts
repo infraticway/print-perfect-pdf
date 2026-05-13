@@ -239,6 +239,20 @@ Deno.serve(async (req) => {
       return json({ created: data });
     }
 
+    if (body.action === "set_price") {
+      const itemId = body.item_id;
+      if (typeof itemId !== "string" || !itemId) throw new Error("item_id inválido");
+      const price = body.price;
+      if (price !== null && (typeof price !== "number" || !Number.isFinite(price) || price < 0)) {
+        throw new Error("price inválido");
+      }
+      const { error } = await db
+        .from("menu_item_prices")
+        .upsert({ item_id: itemId, price, updated_at: new Date().toISOString() });
+      if (error) throw error;
+      return json({ ok: true });
+    }
+
     if (body.action === "translate") {
       const target = body.target as string;
       if (!["en", "es"].includes(target)) throw new Error("Idioma inválido");
