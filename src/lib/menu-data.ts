@@ -63,7 +63,7 @@ export const ITEMS: MenuItem[] = [
   { id: "vanna-morango-sem-cafe", label: "Vannaccino Morango c/ Dulce — Sem Café", section: "Vannaccinos", page: 3, x: 87, y: 62.0 },
   { id: "vanna-morango-com-cafe", label: "Vannaccino Morango c/ Dulce — Com Café", section: "Vannaccinos", page: 3, x: 90.65, y: 42.27 },
   { id: "iced-yopro-sem-cafe", label: "Iced YoPRO Dulce Zero — Sem Café (400ml)", section: "Vannaccinos", page: 3, x: 87, y: 84.0 },
-  { id: "iced-yopro-com-cafe", label: "Iced YoPRO Dulce Zero — Com Café (400ml)", section: "Vannaccinos", page: 3, x: 96, y: 84.0 },
+  { id: "iced-yopro-com-cafe", label: "Iced YoPRO Dulce Zero — Com Café (400ml)", section: "Vannaccinos", page: 3, x: 90.65, y: 42.27 },
 
   // ====== PÁGINA 4 — Clássicos Argentinos (coluna esquerda, x=20%) ======
   { id: "empanada-carne", label: "Empanada Carne Suave (100g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 28.82 },
@@ -110,9 +110,9 @@ export const ITEMS: MenuItem[] = [
   { id: "cubanito-4", label: "Cubanito 4 unid.", section: "Doces", page: 5, x: 21.52, y: 90.45 },
 
   // ====== PÁGINA 5 — Tortas para Levar (coluna direita, x=92%) ======
-  { id: "bolo-chocolatudo-grande", label: "Bolo Chocolatudo (1.4 kg)", section: "Tortas para Levar", page: 5, x: 92, y: 50.5 },
-  { id: "torta-havanna-grande", label: "Torta Havanna (1.1 kg)", section: "Tortas para Levar", page: 5, x: 92, y: 64.0 },
-  { id: "torta-havanna-zero-grande", label: "Torta Havanna Zero (1.1 kg)", section: "Tortas para Levar", page: 5, x: 92, y: 75.5 },
+  { id: "bolo-chocolatudo-grande", label: "Bolo Chocolatudo (1.4 kg)", section: "Tortas para Levar", page: 5, x: 70.9, y: 41.11 },
+  { id: "torta-havanna-grande", label: "Torta Havanna (1.1 kg)", section: "Tortas para Levar", page: 5, x: 70.9, y: 49.03 },
+  { id: "torta-havanna-zero-grande", label: "Torta Havanna Zero (1.1 kg)", section: "Tortas para Levar", page: 5, x: 70.9, y: 54.73 },
 
   // ====== PÁGINA 6 — Alfajores (coluna esquerda, x=24%) ======
   { id: "alfajor-chocolate-leite", label: "Alfajor Solito Chocolate ao Leite (55g)", section: "Alfajores", page: 6, x: 20.31, y: 19.64 },
