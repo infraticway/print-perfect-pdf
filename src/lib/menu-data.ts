@@ -60,18 +60,18 @@ export const ITEMS: MenuItem[] = [
   { id: "vanna-dulce-com-cafe", label: "Vannaccino Dulce de Leche — Com Café", section: "Vannaccinos", page: 3, x: 90.65, y: 42.27 },
   { id: "vanna-choco-sem-cafe", label: "Vannaccino Chocolate c/ Dulce — Sem Café", section: "Vannaccinos", page: 3, x: 86.3, y: 42.27 },
   { id: "vanna-choco-com-cafe", label: "Vannaccino Chocolate c/ Dulce — Com Café", section: "Vannaccinos", page: 3, x: 90.65, y: 42.27 },
-  { id: "vanna-morango-sem-cafe", label: "Vannaccino Morango c/ Dulce — Sem Café", section: "Vannaccinos", page: 3, x: 87, y: 62.0 },
+  { id: "vanna-morango-sem-cafe", label: "Vannaccino Morango c/ Dulce — Sem Café", section: "Vannaccinos", page: 3, x: 86.3, y: 42.27 },
   { id: "vanna-morango-com-cafe", label: "Vannaccino Morango c/ Dulce — Com Café", section: "Vannaccinos", page: 3, x: 90.65, y: 42.27 },
-  { id: "iced-yopro-sem-cafe", label: "Iced YoPRO Dulce Zero — Sem Café (400ml)", section: "Vannaccinos", page: 3, x: 87, y: 84.0 },
-  { id: "iced-yopro-com-cafe", label: "Iced YoPRO Dulce Zero — Com Café (400ml)", section: "Vannaccinos", page: 3, x: 90.65, y: 42.27 },
+  { id: "iced-yopro-sem-cafe", label: "Iced YoPRO Dulce Zero — Sem Café (400ml)", section: "Vannaccinos", page: 3, x: 66.0, y: 82.63 },
+  { id: "iced-yopro-com-cafe", label: "Iced YoPRO Dulce Zero — Com Café (400ml)", section: "Vannaccinos", page: 3, x: 70.4, y: 82.63 },
 
   // ====== PÁGINA 4 — Clássicos Argentinos (coluna esquerda, x=20%) ======
-  { id: "empanada-carne", label: "Empanada Carne Suave (100g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 28.82 },
-  { id: "empanada-presunto-queijo", label: "Empanada Presunto e Queijo (100g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 33.38 },
+  { id: "empanada-carne", label: "Empanada Carne Suave (100g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 21.24 },
+  { id: "empanada-presunto-queijo", label: "Empanada Presunto e Queijo (100g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 21.24 },
   { id: "empanada-queijo-cebola", label: "Empanada Queijo com Cebola (100g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 21.24 },
-  { id: "medialuna-doce", label: "Medialuna Doce (2 unid., 70g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 28.65 },
-  { id: "medialuna-salgada", label: "Medialuna Salgada (2 unid., 70g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 33.9 },
-  { id: "medialuna-combo", label: "Medialuna Combo (1 doce + 1 salgada)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 38.85 },
+  { id: "medialuna-doce", label: "Medialuna Doce (2 unid., 70g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 28.68 },
+  { id: "medialuna-salgada", label: "Medialuna Salgada (2 unid., 70g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 33.24 },
+  { id: "medialuna-combo", label: "Medialuna Combo (1 doce + 1 salgada)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 37.75 },
 
   // ====== PÁGINA 4 — Clássicos Brasileiros (coluna meio, x=43%) ======
   { id: "pdq-multigraos", label: "Pão de Queijo Multigrãos (90g)", section: "Clássicos Brasileiros", page: 4, x: 41.15, y: 56.87 },
@@ -86,12 +86,12 @@ export const ITEMS: MenuItem[] = [
   { id: "torta-palmito", label: "Torta de Palmito — fatia (150g)", section: "Clássicos Brasileiros", page: 4, x: 41.15, y: 86.97 },
 
   // ====== PÁGINA 4 — Especiais Havanna (coluna direita, x=92%) ======
-  { id: "croissant-serrano", label: "Croissant Serrano (135g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 68.16 },
-  { id: "croissant-porteno", label: "Croissant Porteño (148g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 75.4 },
-  { id: "choripan", label: "Choripan (235g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 82.35 },
-  { id: "croque-el-senor", label: "Croque El Señor (200g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 74.85 },
-  { id: "palermo-soho", label: "Palermo Soho (130g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 81.25 },
-  { id: "torrada-petropolis", label: "Torrada Petrópolis (150g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 87.55 },
+  { id: "croissant-serrano", label: "Croissant Serrano (135g)", section: "Especiais Havanna", page: 4, x: 71.5, y: 32.1 },
+  { id: "croissant-porteno", label: "Croissant Porteño (148g)", section: "Especiais Havanna", page: 4, x: 71.5, y: 38.26 },
+  { id: "choripan", label: "Choripan (235g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 68.03 },
+  { id: "croque-el-senor", label: "Croque El Señor (200g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 75.26 },
+  { id: "palermo-soho", label: "Palermo Soho (130g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 82.22 },
+  { id: "torrada-petropolis", label: "Torrada Petrópolis (150g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 88.32 },
 
   // ====== PÁGINA 5 — Doces (coluna esquerda, x=22%) ======
   { id: "bolo-chocolatudo", label: "Bolo Chocolatudo (140g)", section: "Doces", page: 5, x: 21.52, y: 13.88 },
@@ -106,8 +106,8 @@ export const ITEMS: MenuItem[] = [
   { id: "mini-torta-banana", label: "Mini Torta Crumble de Banana (90g)", section: "Doces", page: 5, x: 21.52, y: 72.26 },
   { id: "petit-gateau", label: "Petit Gateau de Dulce de Leche (140g)", section: "Doces", page: 5, x: 21.52, y: 84.64 },
   { id: "churros", label: "Churros (4 unid.)", section: "Doces", page: 5, x: 21.52, y: 79.16 },
-  { id: "cubanito-2", label: "Cubanito 2 unid.", section: "Doces", page: 5, x: 17.13, y: 90.45 },
-  { id: "cubanito-4", label: "Cubanito 4 unid.", section: "Doces", page: 5, x: 21.52, y: 90.45 },
+  { id: "cubanito-2", label: "Cubanito 2 unid.", section: "Doces", page: 5, x: 18.22, y: 90.31 },
+  { id: "cubanito-4", label: "Cubanito 4 unid.", section: "Doces", page: 5, x: 22.57, y: 90.31 },
 
   // ====== PÁGINA 5 — Tortas para Levar (coluna direita, x=92%) ======
   { id: "bolo-chocolatudo-grande", label: "Bolo Chocolatudo (1.4 kg)", section: "Tortas para Levar", page: 5, x: 70.9, y: 41.11 },
@@ -115,18 +115,18 @@ export const ITEMS: MenuItem[] = [
   { id: "torta-havanna-zero-grande", label: "Torta Havanna Zero (1.1 kg)", section: "Tortas para Levar", page: 5, x: 70.9, y: 54.73 },
 
   // ====== PÁGINA 6 — Alfajores (coluna esquerda, x=24%) ======
-  { id: "alfajor-chocolate-leite", label: "Alfajor Solito Chocolate ao Leite (55g)", section: "Alfajores", page: 6, x: 20.31, y: 19.64 },
-  { id: "alfajor-chocolate-branco", label: "Alfajor Solito Chocolate Branco (55g)", section: "Alfajores", page: 6, x: 20.31, y: 21.35 },
-  { id: "alfajor-merengue", label: "Alfajor Solito Merengue (47g)", section: "Alfajores", page: 6, x: 20.31, y: 16.39 },
-  { id: "alfajor-nozes", label: "Alfajor Solito Nozes (55g)", section: "Alfajores", page: 6, x: 20.31, y: 23.46 },
-  { id: "alfajor-70cacao", label: "Alfajor Solito 70% Cacao (65g)", section: "Alfajores", page: 6, x: 20.31, y: 32.81 },
-  { id: "alfajor-mar-del-plata", label: "Alfajor Mar Del Plata (90g)", section: "Alfajores", page: 6, x: 20.31, y: 39.71 },
-  { id: "alfajor-super-dulce", label: "Alfajor Super Dulce de Leche (70g)", section: "Alfajores", page: 6, x: 20.31, y: 47.58 },
-  { id: "alfajor-pistache-dubai", label: "Alfajor Pistache Dubai (65g)", section: "Alfajores", page: 6, x: 20.31, y: 47.58 },
-  { id: "mini-alfajor-leite", label: "Mini Alfajor Solito — Chocolate ao Leite (25g)", section: "Alfajores", page: 6, x: 24, y: 78.0 },
-  { id: "mini-alfajor-branco", label: "Mini Alfajor Solito — Chocolate Branco (25g)", section: "Alfajores", page: 6, x: 24, y: 80.5 },
-  { id: "alfajor-vegano", label: "Alfajor Vegano (70g)", section: "Alfajores", page: 6, x: 41.23, y: 30.87 },
-  { id: "alfajor-sem-acucar", label: "Alfajor Sem Açúcar (70g)", section: "Alfajores", page: 6, x: 41.23, y: 37.37 },
+  { id: "alfajor-chocolate-leite", label: "Alfajor Solito Chocolate ao Leite (55g)", section: "Alfajores", page: 6, x: 41.5, y: 15.61 },
+  { id: "alfajor-chocolate-branco", label: "Alfajor Solito Chocolate Branco (55g)", section: "Alfajores", page: 6, x: 41.5, y: 16.55 },
+  { id: "alfajor-merengue", label: "Alfajor Solito Merengue (47g)", section: "Alfajores", page: 6, x: 41.5, y: 18.92 },
+  { id: "alfajor-nozes", label: "Alfajor Solito Nozes (55g)", section: "Alfajores", page: 6, x: 41.5, y: 20.1 },
+  { id: "alfajor-70cacao", label: "Alfajor Solito 70% Cacao (65g)", section: "Alfajores", page: 6, x: 41.5, y: 21.15 },
+  { id: "alfajor-mar-del-plata", label: "Alfajor Mar Del Plata (90g)", section: "Alfajores", page: 6, x: 41.5, y: 24.0 },
+  { id: "alfajor-super-dulce", label: "Alfajor Super Dulce de Leche (70g)", section: "Alfajores", page: 6, x: 41.5, y: 32.0 },
+  { id: "alfajor-pistache-dubai", label: "Alfajor Pistache Dubai (65g)", section: "Alfajores", page: 6, x: 41.5, y: 38.8 },
+  { id: "mini-alfajor-leite", label: "Mini Alfajor Solito — Chocolate ao Leite (25g)", section: "Alfajores", page: 6, x: 41.5, y: 47.6 },
+  { id: "mini-alfajor-branco", label: "Mini Alfajor Solito — Chocolate Branco (25g)", section: "Alfajores", page: 6, x: 41.5, y: 47.6 },
+  { id: "alfajor-vegano", label: "Alfajor Vegano (70g)", section: "Alfajores", page: 6, x: 91.13, y: 30.87 },
+  { id: "alfajor-sem-acucar", label: "Alfajor Sem Açúcar (70g)", section: "Alfajores", page: 6, x: 91.13, y: 37.37 },
 
   // ====== PÁGINA 6 — Clássicos & Dulce de Leche (coluna meio, x=68%) ======
   { id: "barrita", label: "Barrita (30g)", section: "Clássicos", page: 6, x: 70.29, y: 11.32 },
@@ -134,13 +134,13 @@ export const ITEMS: MenuItem[] = [
   { id: "havannet-solito", label: "Havannet Solito (38g)", section: "Clássicos", page: 6, x: 70.29, y: 21.24 },
   { id: "caixa-6-havannets", label: "Caixa com 6 Havannets", section: "Clássicos", page: 6, x: 70.29, y: 27.0 },
 
-  { id: "ddl-tradicional-170", label: "Dulce de Leche Tradicional — Pote 170g", section: "Dulce de Leche", page: 6, x: 70.29, y: 40.22 },
-  { id: "ddl-tradicional-420", label: "Dulce de Leche Tradicional — Pote 420g", section: "Dulce de Leche", page: 6, x: 70.29, y: 43.47 },
-  { id: "ddl-tradicional-700", label: "Dulce de Leche Tradicional — Pote 700g", section: "Dulce de Leche", page: 6, x: 70.29, y: 46.21 },
-  { id: "ddl-zero-acucar", label: "Dulce de Leche Zero Açúcar — Pote 420g", section: "Dulce de Leche", page: 6, x: 70.29, y: 53.91 },
-  { id: "ddl-zero-lactose", label: "Dulce de Leche Zero Lactose — Pote 420g", section: "Dulce de Leche", page: 6, x: 70.29, y: 59.21 },
-  { id: "caramelo-salgado", label: "Caramelo Salgado Mar Del Plata — Pote 420g", section: "Dulce de Leche", page: 6, x: 70.29, y: 66.85 },
-  { id: "creme-pistache", label: "Creme de Pistache Dubai — Pote 170g", section: "Dulce de Leche", page: 6, x: 68, y: 96.0 },
+  { id: "ddl-tradicional-170", label: "Dulce de Leche Tradicional — Pote 170g", section: "Dulce de Leche", page: 6, x: 70.29, y: 39.95 },
+  { id: "ddl-tradicional-420", label: "Dulce de Leche Tradicional — Pote 420g", section: "Dulce de Leche", page: 6, x: 70.29, y: 41.95 },
+  { id: "ddl-tradicional-700", label: "Dulce de Leche Tradicional — Pote 700g", section: "Dulce de Leche", page: 6, x: 70.29, y: 43.8 },
+  { id: "ddl-zero-acucar", label: "Dulce de Leche Zero Açúcar — Pote 420g", section: "Dulce de Leche", page: 6, x: 70.29, y: 46.08 },
+  { id: "ddl-zero-lactose", label: "Dulce de Leche Zero Lactose — Pote 420g", section: "Dulce de Leche", page: 6, x: 70.29, y: 59.07 },
+  { id: "caramelo-salgado", label: "Caramelo Salgado Mar Del Plata — Pote 420g", section: "Dulce de Leche", page: 6, x: 70.29, y: 66.71 },
+  { id: "creme-pistache", label: "Creme de Pistache Dubai — Pote 170g", section: "Dulce de Leche", page: 6, x: 70.29, y: 63.95 },
 
   // ====== PÁGINA 6 — Caixas de Alfajores & Chocolates (coluna direita, x=93%) ======
   { id: "caixa-4-alfajores", label: "Caixa com 4 Alfajores (70%/Mar del Plata/Sem Açúcar/Pistache)", section: "Caixas", page: 6, x: 91.13, y: 12.97 },
