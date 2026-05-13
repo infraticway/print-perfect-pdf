@@ -86,12 +86,12 @@ export const ITEMS: MenuItem[] = [
   { id: "torta-palmito", label: "Torta de Palmito — fatia (150g)", section: "Clássicos Brasileiros", page: 4, x: 41.15, y: 86.97 },
 
   // ====== PÁGINA 4 — Especiais Havanna (coluna direita, x=92%) ======
-  { id: "croissant-serrano", label: "Croissant Serrano (135g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 68.16 },
-  { id: "croissant-porteno", label: "Croissant Porteño (148g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 75.4 },
-  { id: "choripan", label: "Choripan (235g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 82.35 },
-  { id: "croque-el-senor", label: "Croque El Señor (200g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 74.85 },
-  { id: "palermo-soho", label: "Palermo Soho (130g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 81.25 },
-  { id: "torrada-petropolis", label: "Torrada Petrópolis (150g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 87.55 },
+  { id: "croissant-serrano", label: "Croissant Serrano (135g)", section: "Especiais Havanna", page: 4, x: 71.5, y: 32.1 },
+  { id: "croissant-porteno", label: "Croissant Porteño (148g)", section: "Especiais Havanna", page: 4, x: 71.5, y: 38.26 },
+  { id: "choripan", label: "Choripan (235g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 68.03 },
+  { id: "croque-el-senor", label: "Croque El Señor (200g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 75.26 },
+  { id: "palermo-soho", label: "Palermo Soho (130g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 82.22 },
+  { id: "torrada-petropolis", label: "Torrada Petrópolis (150g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 88.32 },
 
   // ====== PÁGINA 5 — Doces (coluna esquerda, x=22%) ======
   { id: "bolo-chocolatudo", label: "Bolo Chocolatudo (140g)", section: "Doces", page: 5, x: 21.52, y: 13.88 },
@@ -106,8 +106,8 @@ export const ITEMS: MenuItem[] = [
   { id: "mini-torta-banana", label: "Mini Torta Crumble de Banana (90g)", section: "Doces", page: 5, x: 21.52, y: 72.26 },
   { id: "petit-gateau", label: "Petit Gateau de Dulce de Leche (140g)", section: "Doces", page: 5, x: 21.52, y: 84.64 },
   { id: "churros", label: "Churros (4 unid.)", section: "Doces", page: 5, x: 21.52, y: 79.16 },
-  { id: "cubanito-2", label: "Cubanito 2 unid.", section: "Doces", page: 5, x: 17.13, y: 90.45 },
-  { id: "cubanito-4", label: "Cubanito 4 unid.", section: "Doces", page: 5, x: 21.52, y: 90.45 },
+  { id: "cubanito-2", label: "Cubanito 2 unid.", section: "Doces", page: 5, x: 18.22, y: 90.31 },
+  { id: "cubanito-4", label: "Cubanito 4 unid.", section: "Doces", page: 5, x: 22.57, y: 90.31 },
 
   // ====== PÁGINA 5 — Tortas para Levar (coluna direita, x=92%) ======
   { id: "bolo-chocolatudo-grande", label: "Bolo Chocolatudo (1.4 kg)", section: "Tortas para Levar", page: 5, x: 70.9, y: 41.11 },
