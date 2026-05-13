@@ -158,13 +158,13 @@ const SPREAD_ASPECT = 3308 / 2339;
 const SINGLE_ASPECT = 1654 / 2339;
 
 export const PAGES = [
-  { num: 1, src: "/menu/page-1.jpg", aspect: SINGLE_ASPECT },
-  { num: 2, src: "/menu/page-2.jpg", aspect: SPREAD_ASPECT },
-  { num: 3, src: "/menu/page-3.jpg", aspect: SPREAD_ASPECT },
-  { num: 4, src: "/menu/page-4.jpg", aspect: SPREAD_ASPECT },
-  { num: 5, src: "/menu/page-5.jpg", aspect: SPREAD_ASPECT },
-  { num: 6, src: "/menu/page-6.jpg", aspect: SPREAD_ASPECT },
-  { num: 7, src: "/menu/page-7.jpg", aspect: SINGLE_ASPECT },
+  { num: 1, src: "/menu/page-1.jpg", aspect: SINGLE_ASPECT, bg: "#f5efe2" },
+  { num: 2, src: "/menu/page-2.jpg", aspect: SPREAD_ASPECT, bg: "#010101" },
+  { num: 3, src: "/menu/page-3.jpg", aspect: SPREAD_ASPECT, bg: "#fafbf6" },
+  { num: 4, src: "/menu/page-4.jpg", aspect: SPREAD_ASPECT, bg: "#f9faf5" },
+  { num: 5, src: "/menu/page-5.jpg", aspect: SPREAD_ASPECT, bg: "#f7f4f1" },
+  { num: 6, src: "/menu/page-6.jpg", aspect: SPREAD_ASPECT, bg: "#fbfaf8" },
+  { num: 7, src: "/menu/page-7.jpg", aspect: SINGLE_ASPECT, bg: "#f5efe2" },
 ];
 
 export const PAGE_ASPECT = SPREAD_ASPECT; // padrão (spread)

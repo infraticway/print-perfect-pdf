@@ -38,8 +38,10 @@ function Cardapio() {
     trackEvent("pin_click", { pin_id: item.id, page: item.page, language: "pt" });
   };
 
-  const renderPrices = (pageNum: number) =>
-    ITEMS.filter((it) => it.page === pageNum).map((it) => {
+  const renderPrices = (pageNum: number) => {
+    const pageInfo = PAGES.find((p) => p.num === pageNum);
+    const pageBg = pageInfo?.bg ?? "#fafbf6";
+    return ITEMS.filter((it) => it.page === pageNum).map((it) => {
       const price = prices[it.id];
       if (price == null) return null;
       return (
@@ -58,18 +60,18 @@ function Cardapio() {
             left: `${it.x}%`,
             top: `${it.y}%`,
             color: BRAND,
-            background: "transparent",
-            padding: "0.05em 0.15em",
+            background: pageBg,
+            padding: "0.18em 0.35em",
             borderRadius: "2px",
             fontSize: "clamp(6px, 1.05cqi, 11px)",
-            textShadow:
-              "0 0 2px #000, 0 0 2px #000, 0 0 3px #000, 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000",
+            boxShadow: `0 0 0 2px ${pageBg}`,
           }}
         >
           {formatPrice(price)}
         </span>
       );
     });
+  };
 
   return (
     <div className="min-h-screen bg-stone-100">
