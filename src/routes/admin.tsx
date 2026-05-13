@@ -63,12 +63,19 @@ async function renderPageImage(page: (typeof PAGES)[number], prices: Record<stri
   const drawY = (height - drawH) / 2;
   ctx.drawImage(img, drawX, drawY, drawW, drawH);
 
-  ctx.textAlign = "center";
+  ctx.textAlign = "left";
   ctx.textBaseline = "middle";
   ctx.font = "bold 22px Arial, sans-serif";
+
+  const slots = new Map<string, { item: MenuItem; price: number }>();
   for (const item of ITEMS.filter((it) => it.page === page.num)) {
     const price = prices[item.id];
     if (price == null) continue;
+    const slotKey = `${item.page}:${item.x.toFixed(2)}:${item.y.toFixed(2)}`;
+    if (!slots.has(slotKey)) slots.set(slotKey, { item, price });
+  }
+
+  for (const { item, price } of slots.values()) {
     const text = formatPrice(price);
     const x = (item.x / 100) * width;
     const y = (item.y / 100) * height;
@@ -79,11 +86,11 @@ async function renderPageImage(page: (typeof PAGES)[number], prices: Record<stri
     ctx.strokeStyle = "#9b3f18";
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.roundRect(x - badgeW / 2, y - badgeH / 2, badgeW, badgeH, 5);
+    ctx.roundRect(x, y - badgeH / 2, badgeW, badgeH, 5);
     ctx.fill();
     ctx.stroke();
     ctx.fillStyle = "#9b3f18";
-    ctx.fillText(text, x, y + 1);
+    ctx.fillText(text, x + 9, y + 1);
   }
   return { bytes: base64ToBytes(canvas.toDataURL("image/jpeg", 0.86)), width, height, aspect: page.aspect };
 }
