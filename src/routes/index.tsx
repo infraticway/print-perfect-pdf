@@ -27,7 +27,7 @@ function Cardapio() {
   const { prices, loading } = useItemPrices();
   const [showQR, setShowQR] = useState(false);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
-  const [zoomPage, setZoomPage] = useState<{ src: string; aspect: number; num: number } | null>(null);
+  
 
   useEffect(() => {
     trackEvent("view", { language: "pt" });
