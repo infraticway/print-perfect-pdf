@@ -81,12 +81,9 @@ function Cardapio() {
             <button
               key={p.num}
               onClick={() => {
-                setOpenPages((prev) => ({ ...prev, [p.num]: true }));
-                setTimeout(() => {
-                  document
-                    .getElementById(`page-${p.num}`)
-                    ?.scrollIntoView({ behavior: "smooth", block: "start" });
-                }, 50);
+                document
+                  .getElementById(`page-${p.num}`)
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
               }}
               className="shrink-0 rounded-full border border-stone-200 bg-white px-3 py-1 text-[11px] font-medium tracking-wide text-stone-600 active:bg-stone-100"
             >
