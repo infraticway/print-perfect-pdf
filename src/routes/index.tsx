@@ -41,37 +41,16 @@ function Cardapio() {
   const renderPrices = (pageNum: number) => {
     const pageInfo = PAGES.find((p) => p.num === pageNum);
     const pageBg = pageInfo?.bg ?? "#fafbf6";
-    const aspect = pageInfo?.aspect ?? 0.7;
-    // Approximate badge height as % of page height.
-    // Badge ≈ 16px on a page rendered ~1200px tall -> ~1.4%, scale by aspect.
-    const minDy = 2.6 / Math.max(aspect, 0.5);
-    // X tolerance (in %) to consider two badges in the same column.
-    const xTol = 6;
 
-    const pageItems = ITEMS.filter((it) => it.page === pageNum && prices[it.id] != null);
-    // Sort by y so we lay out top→bottom.
-    const sorted = [...pageItems].sort((a, b) => a.y - b.y);
-    const placed: { x: number; y: number }[] = [];
-    const adjusted: Record<string, { x: number; y: number }> = {};
-    for (const it of sorted) {
-      let y = it.y;
-      // Push down while colliding with any already-placed badge in same x column.
-      // Loop until stable.
-      let safety = 0;
-      while (safety++ < 50) {
-        const collide = placed.find(
-          (p) => Math.abs(p.x - it.x) < xTol && Math.abs(p.y - y) < minDy,
-        );
-        if (!collide) break;
-        y = collide.y + minDy;
-      }
-      placed.push({ x: it.x, y });
-      adjusted[it.id] = { x: it.x, y };
+    const slots = new Map<string, { item: MenuItem; price: number }>();
+    for (const item of ITEMS.filter((it) => it.page === pageNum)) {
+      const price = prices[item.id];
+      if (price == null) continue;
+      const slotKey = `${item.page}:${item.x.toFixed(2)}:${item.y.toFixed(2)}`;
+      if (!slots.has(slotKey)) slots.set(slotKey, { item, price });
     }
 
-    return pageItems.map((it) => {
-      const price = prices[it.id]!;
-      const pos = adjusted[it.id] ?? { x: it.x, y: it.y };
+    return Array.from(slots.values()).map(({ item: it, price }) => {
       return (
         <span
           key={it.id}
@@ -85,8 +64,8 @@ function Cardapio() {
           aria-label={`${it.label}: ${formatPrice(price)}`}
           className="absolute -translate-y-1/2 cursor-pointer whitespace-nowrap font-bold leading-none tabular-nums tracking-tight active:scale-95"
           style={{
-            left: `${pos.x}%`,
-            top: `${pos.y}%`,
+            left: `${it.x}%`,
+            top: `${it.y}%`,
             color: BRAND,
             background: pageBg,
             padding: "0.18em 0.35em",
