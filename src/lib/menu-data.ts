@@ -69,9 +69,9 @@ export const ITEMS: MenuItem[] = [
   { id: "empanada-carne", label: "Empanada Carne Suave (100g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 28.82 },
   { id: "empanada-presunto-queijo", label: "Empanada Presunto e Queijo (100g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 33.38 },
   { id: "empanada-queijo-cebola", label: "Empanada Queijo com Cebola (100g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 21.24 },
-  { id: "medialuna-doce", label: "Medialuna Doce (2 unid., 70g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 37.88 },
-  { id: "medialuna-salgada", label: "Medialuna Salgada (2 unid., 70g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 37.88 },
-  { id: "medialuna-combo", label: "Medialuna Combo (1 doce + 1 salgada)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 37.88 },
+  { id: "medialuna-doce", label: "Medialuna Doce (2 unid., 70g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 28.65 },
+  { id: "medialuna-salgada", label: "Medialuna Salgada (2 unid., 70g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 33.9 },
+  { id: "medialuna-combo", label: "Medialuna Combo (1 doce + 1 salgada)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 38.85 },
 
   // ====== PÁGINA 4 — Clássicos Brasileiros (coluna meio, x=43%) ======
   { id: "pdq-multigraos", label: "Pão de Queijo Multigrãos (90g)", section: "Clássicos Brasileiros", page: 4, x: 41.15, y: 56.87 },
@@ -89,9 +89,9 @@ export const ITEMS: MenuItem[] = [
   { id: "croissant-serrano", label: "Croissant Serrano (135g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 68.16 },
   { id: "croissant-porteno", label: "Croissant Porteño (148g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 75.4 },
   { id: "choripan", label: "Choripan (235g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 82.35 },
-  { id: "croque-el-senor", label: "Croque El Señor (200g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 88.45 },
-  { id: "palermo-soho", label: "Palermo Soho (130g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 88.45 },
-  { id: "torrada-petropolis", label: "Torrada Petrópolis (150g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 88.45 },
+  { id: "croque-el-senor", label: "Croque El Señor (200g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 74.85 },
+  { id: "palermo-soho", label: "Palermo Soho (130g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 81.25 },
+  { id: "torrada-petropolis", label: "Torrada Petrópolis (150g)", section: "Especiais Havanna", page: 4, x: 91.13, y: 87.55 },
 
   // ====== PÁGINA 5 — Doces (coluna esquerda, x=22%) ======
   { id: "bolo-chocolatudo", label: "Bolo Chocolatudo (140g)", section: "Doces", page: 5, x: 21.52, y: 13.88 },
