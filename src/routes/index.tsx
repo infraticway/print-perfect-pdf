@@ -53,16 +53,17 @@ function Cardapio() {
           role="button"
           tabIndex={0}
           aria-label={`${it.label}: ${formatPrice(price)}`}
-          className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer whitespace-nowrap font-bold leading-none tabular-nums tracking-tight active:scale-95"
+          className="absolute -translate-y-1/2 cursor-pointer whitespace-nowrap font-bold leading-none tabular-nums tracking-tight active:scale-95"
           style={{
             left: `${it.x}%`,
             top: `${it.y}%`,
             color: BRAND,
-            background: "#1a0f08",
-            padding: "0.35em 0.5em",
+            background: "transparent",
+            padding: "0.05em 0.15em",
             borderRadius: "2px",
-            fontSize: "clamp(8px, 1.6cqi, 15px)",
-            boxShadow: "0 0 0 2px #1a0f08",
+            fontSize: "clamp(6px, 1.05cqi, 11px)",
+            textShadow:
+              "0 0 2px #000, 0 0 2px #000, 0 0 3px #000, 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000",
           }}
         >
           {formatPrice(price)}
