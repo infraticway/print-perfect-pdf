@@ -60,18 +60,18 @@ export const ITEMS: MenuItem[] = [
   { id: "vanna-dulce-com-cafe", label: "Vannaccino Dulce de Leche — Com Café", section: "Vannaccinos", page: 3, x: 90.65, y: 42.27 },
   { id: "vanna-choco-sem-cafe", label: "Vannaccino Chocolate c/ Dulce — Sem Café", section: "Vannaccinos", page: 3, x: 86.3, y: 42.27 },
   { id: "vanna-choco-com-cafe", label: "Vannaccino Chocolate c/ Dulce — Com Café", section: "Vannaccinos", page: 3, x: 90.65, y: 42.27 },
-  { id: "vanna-morango-sem-cafe", label: "Vannaccino Morango c/ Dulce — Sem Café", section: "Vannaccinos", page: 3, x: 87, y: 62.0 },
+  { id: "vanna-morango-sem-cafe", label: "Vannaccino Morango c/ Dulce — Sem Café", section: "Vannaccinos", page: 3, x: 86.3, y: 42.27 },
   { id: "vanna-morango-com-cafe", label: "Vannaccino Morango c/ Dulce — Com Café", section: "Vannaccinos", page: 3, x: 90.65, y: 42.27 },
-  { id: "iced-yopro-sem-cafe", label: "Iced YoPRO Dulce Zero — Sem Café (400ml)", section: "Vannaccinos", page: 3, x: 87, y: 84.0 },
-  { id: "iced-yopro-com-cafe", label: "Iced YoPRO Dulce Zero — Com Café (400ml)", section: "Vannaccinos", page: 3, x: 90.65, y: 42.27 },
+  { id: "iced-yopro-sem-cafe", label: "Iced YoPRO Dulce Zero — Sem Café (400ml)", section: "Vannaccinos", page: 3, x: 66.0, y: 82.63 },
+  { id: "iced-yopro-com-cafe", label: "Iced YoPRO Dulce Zero — Com Café (400ml)", section: "Vannaccinos", page: 3, x: 70.4, y: 82.63 },
 
   // ====== PÁGINA 4 — Clássicos Argentinos (coluna esquerda, x=20%) ======
-  { id: "empanada-carne", label: "Empanada Carne Suave (100g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 28.82 },
-  { id: "empanada-presunto-queijo", label: "Empanada Presunto e Queijo (100g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 33.38 },
+  { id: "empanada-carne", label: "Empanada Carne Suave (100g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 21.24 },
+  { id: "empanada-presunto-queijo", label: "Empanada Presunto e Queijo (100g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 21.24 },
   { id: "empanada-queijo-cebola", label: "Empanada Queijo com Cebola (100g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 21.24 },
-  { id: "medialuna-doce", label: "Medialuna Doce (2 unid., 70g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 28.65 },
-  { id: "medialuna-salgada", label: "Medialuna Salgada (2 unid., 70g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 33.9 },
-  { id: "medialuna-combo", label: "Medialuna Combo (1 doce + 1 salgada)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 38.85 },
+  { id: "medialuna-doce", label: "Medialuna Doce (2 unid., 70g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 28.68 },
+  { id: "medialuna-salgada", label: "Medialuna Salgada (2 unid., 70g)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 33.24 },
+  { id: "medialuna-combo", label: "Medialuna Combo (1 doce + 1 salgada)", section: "Clássicos Argentinos", page: 4, x: 20.31, y: 37.75 },
 
   // ====== PÁGINA 4 — Clássicos Brasileiros (coluna meio, x=43%) ======
   { id: "pdq-multigraos", label: "Pão de Queijo Multigrãos (90g)", section: "Clássicos Brasileiros", page: 4, x: 41.15, y: 56.87 },
